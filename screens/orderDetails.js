@@ -18,9 +18,10 @@ const OrderDetailsScreen = () => {
           <Text style={styles.status}>Delivery Pending</Text>
         </View>
         <View style={styles.orderIdContainer}>
-        <Text style={styles.orderId}>Order ID: 14</Text>
+        <Text style={styles.orderId}>Order ID: 143</Text>
         </View>
       <View style={styles.orderInfoContainer}>
+        <Text style={styles.type}>Pizza</Text>
         
       </View>
       <View style={styles.customerInfoContainer}>
@@ -30,7 +31,6 @@ const OrderDetailsScreen = () => {
         <Text style={styles.quantity}>Quantity: 2</Text>
       </View>
       <View style={styles.orderDetailsContainer}>
-        <Text style={styles.type}>Type: Pizza</Text>
         <Text style={styles.TotalPrice}>Total: $29.98</Text>
       </View>
       <Image
@@ -57,14 +57,11 @@ const OrderDetailsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
     padding: 20,
   },
   orderInfoContainer: {
-    flexDirection: "row",
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
     marginBottom: 20,
   },
   orderIdContainer : {
@@ -77,7 +74,7 @@ const styles = StyleSheet.create({
 
   },
   type: {
-    fontSize: 24,
+    fontSize: 56,
     fontWeight: "bold",
     textTransform: "uppercase",
   },
