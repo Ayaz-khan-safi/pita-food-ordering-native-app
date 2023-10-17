@@ -4,7 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet, Text, View } from "react-native";
 import Login from "./screens/login";
 import Dashboard from "./screens/dashboard";
+import PendingOrders from "./screens/pendingOrders";
+import DeliveredOrders from "./screens/deliveredOrders";
 import AppHeader from "./components/appHeader";
+import OrderDetailsScreen from "./screens/orderDetails";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -26,6 +29,21 @@ export default function App() {
           name="dashboard"
           component={Dashboard}
           options={{ title: "Dashbaord" }}
+        />
+        <Stack.Screen
+          name="deliveredOrders"
+          component={DeliveredOrders}
+          options={{ title: "Delivered Orders" }}
+        />
+        <Stack.Screen
+          name="pendingOrders"
+          component={PendingOrders}
+          options={{ title: "Pending Orders" }}
+        />
+        <Stack.Screen
+          name="orderDetails"
+          component={OrderDetailsScreen}
+          options={{ title: "Order Details" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

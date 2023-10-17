@@ -7,6 +7,7 @@ import {
   Text,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import OneCard from "../components/oneCard";
 
 export default function Dashboard() {
   const navigation = useNavigation();
@@ -17,12 +18,19 @@ export default function Dashboard() {
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
+        {/* <OneCard /> */}
         <View style={styles.container}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("pendingOrders")}
+          >
             <Text style={styles.buttonText}>Pending Orders</Text>
             <Text style={styles.buttonText}>1</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.deliveredButton}>
+          <TouchableOpacity
+            style={styles.deliveredButton}
+            onPress={() => navigation.navigate("deliveredOrders")}
+          >
             <Text style={styles.deliveredButtonText}>Delivered Orders</Text>
             <Text style={styles.deliveredButtonText}>5</Text>
           </TouchableOpacity>
@@ -40,7 +48,7 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 2,
     backgroundColor: "rgba(0, 0, 0, 0.6)",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   container: {
     display: "flex",

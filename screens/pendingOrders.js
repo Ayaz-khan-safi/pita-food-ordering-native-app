@@ -4,18 +4,17 @@ import {
   View,
   ImageBackground,
   TouchableOpacity,
-  FlatList,
   Text,
+  FlatList,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import OrderCard from "../components/orderCard";
 import dummyData from "../data/dummy";
+import OrderCard from "../components/orderCard";
+import { useNavigation } from "@react-navigation/native";
 
-export default function DeliveredOrders() {
+export default function PendingOrders() {
   const navigation = useNavigation();
-
-  const deliveredOrdersList = dummyData.filter(
-    (item) => item.status === "delivered"
+  const pendingOrdersList = dummyData.filter(
+    (item) => item.status === "pending"
   );
   return (
     <ImageBackground
@@ -26,7 +25,7 @@ export default function DeliveredOrders() {
         <View style={styles.container}>
           <FlatList
             FlatList
-            data={deliveredOrdersList}
+            data={pendingOrdersList}
             renderItem={OrderCard}
             keyExtractor={(item) => item.id}
           />
@@ -54,7 +53,17 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
     paddingTop: 50,
   },
-  text: {
+  button: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 30,
+    height: 50,
+    backgroundColor: "#FFDF00",
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  buttonText: {
     color: "#000",
     fontSize: 18,
   },
