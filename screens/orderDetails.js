@@ -1,7 +1,19 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity , ImageBackground,} from "react-native";
+import dummyData from "../data/dummy";
+import { useRoute } from '@react-navigation/native';
 
-const OrderDetailsScreen = () => {
+
+export default function OrderDetailsScreen() {
+
+  const route = useRoute();
+  const { id } = route.params;
+  const filteredItem = dummyData.filter(
+    (item) => item.id === id
+  );
+
+  // const totalPrice = {filteredItem[0].quantity} + {filteredItem[0].quantity}
+  console.log('Id',filteredItem)
   const handleAssignRider = () => {
     // Logic to assign a rider to the order
     console.log("Rider assigned!");
@@ -12,31 +24,44 @@ const OrderDetailsScreen = () => {
     console.log("Order canceled!");
   };
   return (
+    <ImageBackground
+    source={require("../assets/bg-img.jpg")}
+    style={styles.backgroundImage}
+  >
+    <View style={styles.overlay}>
     <View style={styles.container}>
 
         <View style={styles.statusContainer}>
           <Text style={styles.status}>Delivery Pending</Text>
         </View>
         <View style={styles.orderIdContainer}>
-        <Text style={styles.orderId}>Order ID: 143</Text>
+        <Text style={styles.orderId}>Order ID: {filteredItem[0].id}</Text>
         </View>
       <View style={styles.orderInfoContainer}>
-        <Text style={styles.type}>Pizza</Text>
+        <Text style={styles.type}>{filteredItem[0].type}</Text>
         
       </View>
       <View style={styles.customerInfoContainer}>
-        <Text style={styles.customerName}>Customer: John Doe</Text>
-        <Text style={styles.address}>Address: 6th st, North ave, Halway Rd, London, United Kingdom</Text>
-        <Text style={styles.price}>Price: $14.99</Text>
-        <Text style={styles.quantity}>Quantity: 2</Text>
+        <Text style={styles.customerName}>Customer: {filteredItem[0].customerName}</Text>
+        <Text style={styles.address}>{filteredItem[0].address}</Text>
+        <Text style={styles.price}>Price: ${filteredItem[0].price}</Text>
+        <Text style={styles.quantity}>Quantity: {filteredItem[0].quantity}</Text>
       </View>
       <View style={styles.orderDetailsContainer}>
-        <Text style={styles.TotalPrice}>Total: $29.98</Text>
+        <Text style={styles.TotalPrice}>Total: ${filteredItem[0].quantity * filteredItem[0].price}</Text>
       </View>
-      <Image
-        source={require("../assets/OrderCardImage/pizzaImage.png")}
-        style={styles.image}
-      />
+      {
+        filteredItem[0].type === 'pizza' ? 
+        <Image
+          source={require("../assets/OrderCardImage/pizzaImage.png")}
+          style={styles.image}
+        />
+:        <Image
+source={require("../assets/OrderCardImage/burgerImage.png")}
+style={styles.image}
+/>
+
+      }
       <View style={styles.buttonContainer}>
         {/* Cancel Order Button */}
         <TouchableOpacity style={[styles.button, { backgroundColor: 'red' }]} onPress={handleCancelOrder}>
@@ -51,10 +76,21 @@ const OrderDetailsScreen = () => {
 
 
     </View>
+    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
+  },
+  overlay: {
+    flex: 2,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    justifyContent: "flex-end",
+  },
   container: {
     flex: 1,
     justifyContent: "flex-end",
@@ -71,12 +107,14 @@ const styles = StyleSheet.create({
   orderId: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "white"
 
   },
   type: {
     fontSize: 56,
     fontWeight: "bold",
     textTransform: "uppercase",
+    color: "white"
   },
   statusContainer : {
     position: "absolute",
@@ -91,26 +129,33 @@ const styles = StyleSheet.create({
   },
   customerInfoContainer: {
     marginBottom: 20,
+    color: "red"
   },
   customerName: {
     fontSize: 16,
+    color: "white"
   },
   address: {
     fontSize: 16,
+    color: "white"
   },
   orderDetailsContainer: {
     marginBottom: 20,
+    color: "white"
   },
   quantity: {
     fontSize: 16,
+    color: "white"
   },
   price: {
     fontSize: 16,
+    color: "white"
   },
   TotalPrice : {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 5,
+    color: "white"
   },
   image: {
     width: '100%',
@@ -138,4 +183,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderDetailsScreen;

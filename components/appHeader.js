@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
-const AppHeader = (props) => {
+export default function AppHeader(props){
   return (
     <View style={styles.header}>
       <Text style={styles.headerText}>{props.options.title}</Text>
@@ -26,4 +26,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppHeader;

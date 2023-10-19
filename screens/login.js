@@ -26,15 +26,7 @@ export default function Login() {
   const handleLogin = () => {
     console.log(username);
     console.log(pass);
-    if (
-      username === userCredentials.username &&
-      pass === userCredentials.pass
-    ) {
-      navigation.navigate("dashboard");
-    } else {
-      setIsSnackBarVisible(true);
-      console.log("User Credentials are Incorrect");
-    }
+    navigation.navigate("dashboard");
   };
 
   return (

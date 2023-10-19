@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 
-const OneCard = () => {
+export default function OneCard(){
   return (
     <View style={styles.container}>
       <View style={styles.statusContainerDelivered}>
@@ -154,4 +154,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OneCard;

@@ -15,7 +15,7 @@ export default function App() {
     <NavigationContainer>
       <StatusBar hidden />
       <Stack.Navigator
-        initialRouteName="orderDetails"
+        initialRouteName="dashboard"
         screenOptions={{
           header: (props) => <AppHeader {...props} />,
         }}

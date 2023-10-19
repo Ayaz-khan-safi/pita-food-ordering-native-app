@@ -1,55 +1,52 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 
-const OrderCard = ({ item }) => {
+export default function OrderCard({ item }) {
   const totalPrice = item.price * item.quantity;
+
   return (
-    <TouchableOpacity>
-      <View style={styles.container}>
-        <View
+    <View style={styles.container}>
+      <View
+        style={
+          item.status === "pending"
+            ? styles.statusContainerPending
+            : styles.statusContainerDelivered
+        }
+      >
+        <Text
           style={
             item.status === "pending"
-              ? styles.statusContainerPending
-              : styles.statusContainerDelivered
+              ? styles.statusTextPending
+              : styles.statusTextDelireved
           }
         >
-          <Text
-            style={
-              item.status === "pending"
-                ? styles.statusTextPending
-                : styles.statusTextDelireved
-            }
-          >
-            {item.status}
-          </Text>
-        </View>
-        <View style={styles.totalContainer}>
-          <Text style={styles.totalText}>Total: {totalPrice}</Text>
-        </View>
+          {item.status}
+        </Text>
+      </View>
+      <View style={styles.totalContainer}>
+        <Text style={styles.totalText}>Total: {totalPrice}</Text>
+      </View>
 
-        <Image style={styles.image} source={item.image} />
-        <View style={styles.detailsContainer}>
-          <View style={styles.topDetails}>
-            <View>
-              <Text style={styles.orderType}>{item.type}</Text>
+      <Image style={styles.image} source={item.image} />
+      <View style={styles.detailsContainer}>
+        <View style={styles.topDetails}>
+          <View>
+            <Text style={styles.orderType}>{item.type}</Text>
 
-              <Text style={styles.price}>Price: {item.price}</Text>
-            </View>
-            <View>
-              <Text style={styles.quantity}>Quantity: {item.quantity}</Text>
-            </View>
+            <Text style={styles.price}>Price: {item.price}</Text>
           </View>
           <View>
-            <Text style={styles.customerName}>
-              CUSTOMER: {item.customerName}
-            </Text>
-            <Text style={styles.address}>ADDRESS: {item.address}</Text>
+            <Text style={styles.quantity}>Quantity: {item.quantity}</Text>
           </View>
         </View>
+        <View>
+          <Text style={styles.customerName}>CUSTOMER: {item.customerName}</Text>
+          <Text style={styles.address}>ADDRESS: {item.address}</Text>
+        </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -169,5 +166,3 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
-
-export default OrderCard;

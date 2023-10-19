@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -7,10 +7,16 @@ import {
   Text,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import OneCard from "../components/oneCard";
 
 export default function Dashboard() {
   const navigation = useNavigation();
+
+  const pendingOrders = () => {
+    navigation.navigate("pendingOrders");
+  };
+  const deliveredOrders = () => {
+    navigation.navigate("deliveredOrders");
+  };
 
   return (
     <ImageBackground
@@ -20,16 +26,13 @@ export default function Dashboard() {
       <View style={styles.overlay}>
         {/* <OneCard /> */}
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("pendingOrders")}
-          >
+          <TouchableOpacity style={styles.button} onPress={pendingOrders}>
             <Text style={styles.buttonText}>Pending Orders</Text>
             <Text style={styles.buttonText}>1</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.deliveredButton}
-            onPress={() => navigation.navigate("deliveredOrders")}
+            onPress={deliveredOrders}
           >
             <Text style={styles.deliveredButtonText}>Delivered Orders</Text>
             <Text style={styles.deliveredButtonText}>5</Text>

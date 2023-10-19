@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -11,11 +11,25 @@ import dummyData from "../data/dummy";
 import OrderCard from "../components/orderCard";
 import { useNavigation } from "@react-navigation/native";
 
+
 export default function PendingOrders() {
-  const navigation = useNavigation();
-  const pendingOrdersList = dummyData.filter(
+  const navigation = useNavigation()
+  const deliveredOrdersList = dummyData.filter(
     (item) => item.status === "pending"
   );
+
+  const handleCardClick = (item) => {
+    console.log('Card clicked:', item);
+    navigation.navigate('orderDetails',{id: item.id})
+  };
+
+  const renderOrderCard = ({ item }) => {
+    return (
+      <TouchableOpacity onPress={() => handleCardClick(item)}>
+        <OrderCard item={item} />
+      </TouchableOpacity>
+    );
+  };
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -23,10 +37,9 @@ export default function PendingOrders() {
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-          <FlatList
-            FlatList
-            data={pendingOrdersList}
-            renderItem={OrderCard}
+        <FlatList
+            data={deliveredOrdersList}
+            renderItem={renderOrderCard}
             keyExtractor={(item) => item.id}
           />
         </View>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -7,16 +7,30 @@ import {
   FlatList,
   Text,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import OrderCard from "../components/orderCard";
 import dummyData from "../data/dummy";
+import { useNavigation } from "@react-navigation/native";
 
-export default function DeliveredOrders() {
-  const navigation = useNavigation();
 
-  const deliveredOrdersList = dummyData.filter(
-    (item) => item.status === "delivered"
-  );
+  export default function DeliveredOrders() {
+    const navigation = useNavigation()
+    const deliveredOrdersList = dummyData.filter(
+      (item) => item.status === "delivered"
+    );
+  
+    const handleCardClick = (item) => {
+      console.log('Card clicked:', item);
+      navigation.navigate('orderDetails',{id: item.id})
+    };
+
+    const renderOrderCard = ({ item }) => {
+      return (
+        <TouchableOpacity onPress={() => handleCardClick(item)}>
+          <OrderCard item={item} />
+        </TouchableOpacity>
+      );
+    };
+
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -24,10 +38,9 @@ export default function DeliveredOrders() {
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-          <FlatList
-            FlatList
+        <FlatList
             data={deliveredOrdersList}
-            renderItem={OrderCard}
+            renderItem={renderOrderCard}
             keyExtractor={(item) => item.id}
           />
         </View>
@@ -58,4 +71,4 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 18,
   },
-});
+})
