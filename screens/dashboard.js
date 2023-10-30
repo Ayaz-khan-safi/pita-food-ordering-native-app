@@ -7,9 +7,19 @@ import {
   Text,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
+import { increment, decrement, selectCounter } from "../slices/counterSlice";
+import { useGetUserJsonQuery, useGetUserQuery, useLoginUserMutation } from "../api/apiSlice";
 
 export default function Dashboard() {
   const navigation = useNavigation();
+  const {data, isLoading} = useGetUserQuery({ username: 'attzazkhan', password: 'aBC@1234567' })
+  // const {data, isLoading}= useLoginUserMutation({ username: 'attzazkhan', password: 'aBC@1234567' })
+  // const {data, isLoading} = useGetUserJsonQuery( {id: 2})
+
+  console.log(data, isLoading)
+  const count = useSelector(selectCounter)
+  const dispatch = useDispatch()
 
   const pendingOrders = () => {
     navigation.navigate("pendingOrders");
@@ -25,6 +35,17 @@ export default function Dashboard() {
     >
       <View style={styles.overlay}>
         {/* <OneCard /> */}
+        <View style={styles.container}>
+          <View>
+            <Text style={styles.totalCount}>Total Click: {count}</Text>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={()=>dispatch(increment())}>
+            <Text>Increase</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={()=> dispatch(decrement())}>
+            <Text>Decrease</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.container}>
           <TouchableOpacity style={styles.button} onPress={pendingOrders}>
             <Text style={styles.buttonText}>Pending Orders</Text>
@@ -44,6 +65,9 @@ export default function Dashboard() {
 }
 
 const styles = StyleSheet.create({
+  totalCount :{
+    color: "#fff"
+  },
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",

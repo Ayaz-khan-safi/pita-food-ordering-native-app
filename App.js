@@ -8,8 +8,10 @@ import PendingOrders from "./screens/pendingOrders";
 import DeliveredOrders from "./screens/deliveredOrders";
 import AppHeader from "./components/appHeader";
 import OrderDetailsScreen from "./screens/orderDetails";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
-export default function App() {
+function AppComponent(){
   const Stack = createStackNavigator();
   return (
     <NavigationContainer>
@@ -47,7 +49,15 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
-  );
+      );
+}
+
+export default function App() {
+  return(
+    <Provider store={store}>
+      <AppComponent/>
+    </Provider>
+  )
 }
 
 const styles = StyleSheet.create({
