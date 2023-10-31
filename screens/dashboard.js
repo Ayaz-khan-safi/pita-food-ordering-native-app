@@ -9,15 +9,17 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement, selectCounter } from "../slices/counterSlice";
-import { useGetUserJsonQuery, useGetUserQuery, useLoginUserMutation } from "../api/apiSlice";
+import { useGetUserJsonQuery, useGetUserQuery, useLoginUserMutation, useLoginUserQuery } from "../api/apiSlice";
+import * as SecureStore from 'expo-secure-store';
 
 export default function Dashboard() {
   const navigation = useNavigation();
-  const {data, isLoading} = useGetUserQuery({ username: 'attzazkhan', password: 'aBC@1234567' })
-  // const {data, isLoading}= useLoginUserMutation({ username: 'attzazkhan', password: 'aBC@1234567' })
-  // const {data, isLoading} = useGetUserJsonQuery( {id: 2})
-
-  console.log(data, isLoading)
+ const {data, error} = useLoginUserQuery()
+  async function getToken (){
+    const retToken = await SecureStore.getItemAsync('userToken');
+    console.log( data.data.employees[0].workEmail, error)
+  }
+  getToken()
   const count = useSelector(selectCounter)
   const dispatch = useDispatch()
 
