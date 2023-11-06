@@ -10,23 +10,42 @@ import {
 } from "react-native";
 import { Snackbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-
-const userCredentials = {
-  username: "attzazkhan",
-  pass: "attzaz@123",
-};
+import { useLoginUserMutation } from "../services/login-Api";
+import * as SecureStore from "expo-secure-store";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [isSnackBarVisible, setIsSnackBarVisible] = useState(false);
+  const [snackBarMessage, setSnackBarMessage] = useState(
+    "Incorrect Username OR Password. Please try again."
+  );
 
   const navigation = useNavigation();
+  const [mutation] = useLoginUserMutation();
 
   const handleLogin = () => {
-    console.log(username);
-    console.log(pass);
-    navigation.navigate("dashboard");
+    console.log(email, " ", pass);
+    mutation({ email, pass })
+      .unwrap()
+      .then(async (response) => {
+        if (response.data == null) {
+          console.log(response.message);
+          setIsSnackBarVisible(true);
+          setSnackBarMessage(response.message);
+        } else {
+          if (response.data.user.role === "OWNER") {
+            console.log(response.data.user.role);
+            await SecureStore.setItemAsync("token", response.data.access);
+            navigation.navigate("dashboard");
+          }
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        setIsSnackBarVisible(true);
+        setSnackBarMessage(error.data.message);
+      });
   };
 
   return (
@@ -41,8 +60,8 @@ export default function Login() {
         <View style={styles.container}>
           <TextInput
             style={styles.input}
-            placeholder="Username"
-            onChangeText={setUsername}
+            placeholder="Email"
+            onChangeText={setEmail}
             placeholderTextColor="#000"
           />
           <TextInput
@@ -69,7 +88,7 @@ export default function Login() {
           marginHorizontal: 40,
         }}
       >
-        Incorrect Username OR Password. Please try again.
+        {snackBarMessage}
       </Snackbar>
     </ImageBackground>
   );

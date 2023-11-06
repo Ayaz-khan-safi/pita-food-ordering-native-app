@@ -11,13 +11,13 @@ import OrderDetailsScreen from "./screens/orderDetails";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
-function AppComponent(){
+function AppComponent() {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer>
       <StatusBar hidden />
       <Stack.Navigator
-        initialRouteName="dashboard"
+        initialRouteName="login"
         screenOptions={{
           header: (props) => <AppHeader {...props} />,
         }}
@@ -49,15 +49,15 @@ function AppComponent(){
         />
       </Stack.Navigator>
     </NavigationContainer>
-      );
+  );
 }
 
 export default function App() {
-  return(
+  return (
     <Provider store={store}>
-      <AppComponent/>
+      <AppComponent />
     </Provider>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

@@ -9,27 +9,20 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement, selectCounter } from "../slices/counterSlice";
-import { useGetUserJsonQuery, useGetUserQuery, useLoginUserMutation, useLoginUserQuery } from "../api/apiSlice";
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 
 export default function Dashboard() {
   const navigation = useNavigation();
- const {data, error} = useLoginUserQuery()
-  async function getToken (){
-    const retToken = await SecureStore.getItemAsync('userToken');
-    console.log( data.data.employees[0].workEmail, error)
-  }
-  getToken()
-  const count = useSelector(selectCounter)
-  const dispatch = useDispatch()
-
+  const count = useSelector(selectCounter);
+  const dispatch = useDispatch();
   const pendingOrders = () => {
     navigation.navigate("pendingOrders");
   };
   const deliveredOrders = () => {
     navigation.navigate("deliveredOrders");
   };
-
+  const token = SecureStore.getItemAsync("token");
+  console.log(token);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -41,10 +34,16 @@ export default function Dashboard() {
           <View>
             <Text style={styles.totalCount}>Total Click: {count}</Text>
           </View>
-          <TouchableOpacity style={styles.button} onPress={()=>dispatch(increment())}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => dispatch(increment())}
+          >
             <Text>Increase</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={()=> dispatch(decrement())}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => dispatch(decrement())}
+          >
             <Text>Decrease</Text>
           </TouchableOpacity>
         </View>
@@ -67,8 +66,8 @@ export default function Dashboard() {
 }
 
 const styles = StyleSheet.create({
-  totalCount :{
-    color: "#fff"
+  totalCount: {
+    color: "#fff",
   },
   backgroundImage: {
     flex: 1,
