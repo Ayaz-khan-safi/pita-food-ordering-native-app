@@ -9,10 +9,14 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement, selectCounter } from "../slices/counterSlice";
-import * as SecureStore from "expo-secure-store";
+import { useAllOrdersQuery } from "../services/orders-api";
 
 export default function Dashboard() {
   const navigation = useNavigation();
+
+  const { data: orders } = useAllOrdersQuery();
+  console.log(orders.data);
+
   const count = useSelector(selectCounter);
   const dispatch = useDispatch();
   const pendingOrders = () => {
@@ -21,8 +25,7 @@ export default function Dashboard() {
   const deliveredOrders = () => {
     navigation.navigate("deliveredOrders");
   };
-  const token = SecureStore.getItemAsync("token");
-  console.log(token);
+
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}

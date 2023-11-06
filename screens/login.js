@@ -10,12 +10,12 @@ import {
 } from "react-native";
 import { Snackbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { useLoginUserMutation } from "../services/login-Api";
+import { useLoginUserMutation } from "../services/login-api";
 import * as SecureStore from "expo-secure-store";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const [email, setEmail] = useState("attzazg@gmail.com");
+  const [pass, setPass] = useState("aBC@1234567");
   const [isSnackBarVisible, setIsSnackBarVisible] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState(
     "Incorrect Username OR Password. Please try again."
@@ -32,11 +32,11 @@ export default function Login() {
         if (response.data == null) {
           console.log(response.message);
           setIsSnackBarVisible(true);
-          setSnackBarMessage(response.message);
+          setSnackBarMessage(response);
         } else {
           if (response.data.user.role === "OWNER") {
-            console.log(response.data.user.role);
-            await SecureStore.setItemAsync("token", response.data.access);
+            console.log(response.data.AccessToken);
+            await SecureStore.setItemAsync("token", response.data.AccessToken);
             navigation.navigate("dashboard");
           }
         }
