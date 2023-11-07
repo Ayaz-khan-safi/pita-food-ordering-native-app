@@ -2,46 +2,47 @@ import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 
 export default function OrderCard({ item }) {
-  const totalPrice = item.price * item.quantity;
-
   return (
     <View style={styles.container}>
       <View
         style={
-          item.status === "pending"
+          item.orderStatus === "PENDING"
             ? styles.statusContainerPending
             : styles.statusContainerDelivered
         }
       >
         <Text
           style={
-            item.status === "pending"
+            item.orderStatus === "PENDING"
               ? styles.statusTextPending
               : styles.statusTextDelireved
           }
         >
-          {item.status}
+          {item.orderStatus}
         </Text>
       </View>
       <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Total: {totalPrice}</Text>
+        <Text style={styles.totalText}>Total: {item?.totalAmount}</Text>
       </View>
 
-      <Image style={styles.image} source={item.image} />
+      <Image style={styles.image} source={item?.image} />
       <View style={styles.detailsContainer}>
         <View style={styles.topDetails}>
           <View>
-            <Text style={styles.orderType}>{item.type}</Text>
+            <Text style={styles.custName}>{item?.customers?.name}</Text>
 
-            <Text style={styles.price}>Price: {item.price}</Text>
+            <Text style={styles.orderObj}>Burger | Coke | Family Deal</Text>
           </View>
           <View>
-            <Text style={styles.quantity}>Quantity: {item.quantity}</Text>
+            <Text style={styles.paymentMode}>
+              Payment Mode: {item?.paymentDetails?.paymentType}
+            </Text>
           </View>
         </View>
         <View>
-          <Text style={styles.customerName}>CUSTOMER: {item.customerName}</Text>
-          <Text style={styles.address}>ADDRESS: {item.address}</Text>
+          <Text style={styles.address}>
+            {item?.customers?.street}, {item?.customers?.address}
+          </Text>
         </View>
       </View>
     </View>
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   customerName: {
-    fontSize: 14,
+    fontSize: 12,
     color: "green",
     marginBottom: 2,
   },
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     color: "green",
     marginBottom: 2,
   },
-  orderType: {
+  custName: {
     fontSize: 18,
     fontWeight: "bold",
     color: "green",
@@ -145,13 +146,13 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 5,
   },
-  quantity: {
+  paymentMode: {
     fontSize: 14,
     color: "green",
     marginBottom: 2,
   },
-  price: {
-    fontSize: 14,
+  orderObj: {
+    fontSize: 12,
     color: "green",
     marginBottom: 5,
   },

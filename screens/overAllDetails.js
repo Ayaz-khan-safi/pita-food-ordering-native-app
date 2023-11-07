@@ -9,16 +9,31 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement, selectCounter } from "../slices/counterSlice";
-import { useAllOrdersQuery } from "../services/orders-api";
+import { useAllOrdersQuery } from "../services/ordersApi";
 
 export default function Dashboard() {
   const navigation = useNavigation();
 
   const { data: orders } = useAllOrdersQuery();
-  console.log(orders.data);
+  console.log(orders?.data?.result);
 
-  const count = useSelector(selectCounter);
-  const dispatch = useDispatch();
+  const allCreatedOrders = orders?.data?.result
+    ? orders?.data?.result.filter((order) => order.orderStatus === "CREATED")
+        .length
+    : 0;
+  const allAcceptedOrders = orders?.data?.result
+    ? orders?.data?.result.filter((order) => order.orderStatus === "ACCEPTED")
+        .length
+    : 0;
+  const allPendingOrders = orders?.data?.result
+    ? orders?.data?.result.filter((order) => order.orderStatus === "PENDING")
+        .length
+    : 0;
+  const allDeliveredOrders = orders?.data?.result
+    ? orders?.data?.result.filter((order) => order.orderStatus === "DELIVERED")
+        .length
+    : 0;
+
   const pendingOrders = () => {
     navigation.navigate("pendingOrders");
   };
@@ -32,35 +47,32 @@ export default function Dashboard() {
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
-        {/* <OneCard /> */}
         <View style={styles.container}>
-          <View>
-            <Text style={styles.totalCount}>Total Click: {count}</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => dispatch(increment())}
-          >
-            <Text>Increase</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => dispatch(decrement())}
-          >
-            <Text>Decrease</Text>
-          </TouchableOpacity>
+          <Text style={styles.totalText}>
+            Total Orders: {orders?.data?.metadata?.total}
+          </Text>
+          <Text style={styles.detailsText}>
+            Newly Created: {allCreatedOrders}
+          </Text>
+          <Text style={styles.detailsText}>
+            Pending Orders: {allPendingOrders}
+          </Text>
+          <Text style={styles.detailsText}>
+            Total Delivered: {allDeliveredOrders}
+          </Text>
+          <Text style={styles.detailsText}>Accepted: {allAcceptedOrders}</Text>
         </View>
         <View style={styles.container}>
           <TouchableOpacity style={styles.button} onPress={pendingOrders}>
             <Text style={styles.buttonText}>Pending Orders</Text>
-            <Text style={styles.buttonText}>1</Text>
+            <Text style={styles.buttonText}>{allPendingOrders}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.deliveredButton}
             onPress={deliveredOrders}
           >
             <Text style={styles.deliveredButtonText}>Delivered Orders</Text>
-            <Text style={styles.deliveredButtonText}>5</Text>
+            <Text style={styles.deliveredButtonText}>{allDeliveredOrders}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -118,5 +130,13 @@ const styles = StyleSheet.create({
   deliveredButtonText: {
     color: "#FFDF00",
     fontSize: 18,
+  },
+  detailsText: {
+    fontSize: 16,
+    color: "#FFF",
+  },
+  totalText: {
+    fontSize: 36,
+    color: "#FFDF00",
   },
 });

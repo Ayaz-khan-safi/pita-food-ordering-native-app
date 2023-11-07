@@ -13,7 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 
 export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
-  const [deliveryTime, setDeliveryTime] = useState("")
+  const [deliveryTime, setDeliveryTime] = useState("");
   const route = useRoute();
   const { id } = route.params;
   const filteredItem = dummyData.filter((item) => item.id === id);
@@ -22,7 +22,7 @@ export default function OrderDetailsScreen() {
   const handleAssignRider = () => {
     console.log("Rider assigned!");
   };
-  console.log(deliveryTime)
+  console.log(deliveryTime);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -34,9 +34,9 @@ export default function OrderDetailsScreen() {
             <Text style={styles.status}>Delivery Pending</Text>
           </View>
           <View style={styles.orderIdContainer}>
-            <Text style={styles.orderId}>Order ID: {filteredItem[0].id}</Text>
+            <Text style={styles.orderId}>Order ID: {filteredItem[0]?.id}</Text>
           </View>
-          {filteredItem[0].type === "pizza" ? (
+          {filteredItem[0]?.type === "pizza" ? (
             <Image
               source={require(`../assets/OrderCardImage/pizzaImage.png`)}
               style={styles.image}
@@ -48,41 +48,48 @@ export default function OrderDetailsScreen() {
             />
           )}
           <View style={styles.orderInfoContainer}>
-            <Text style={styles.type}>{filteredItem[0].type}</Text>
+            <Text style={styles.type}>{filteredItem[0]?.type}</Text>
           </View>
           <View style={styles.customerInfoContainer}>
             <Text style={styles.customerName}>
-              Customer: {filteredItem[0].customerName}
+              Customer: {filteredItem[0]?.customerName}
             </Text>
-            <Text style={styles.address}>{filteredItem[0].address}</Text>
-            <Text style={styles.price}>Price: ${filteredItem[0].price}</Text>
+            <Text style={styles.address}>{filteredItem[0]?.address}</Text>
+            <Text style={styles.price}>Price: ${filteredItem[0]?.price}</Text>
             <Text style={styles.quantity}>
-              Quantity: {filteredItem[0].quantity}
+              Quantity: {filteredItem[0]?.quantity}
             </Text>
           </View>
           <View style={styles.orderDetailsContainer}>
             <Text style={styles.TotalPrice}>
-              Total: ${filteredItem[0].quantity * filteredItem[0].price}
+              Total: ${filteredItem[0]?.quantity * filteredItem[0]?.price}
             </Text>
           </View>
           <View style={styles.timeCards}>
-            <TouchableOpacity style={styles.timeSingleCard} onPress={()=>setDeliveryTime("15")}>
-              <Text style={styles.quantity}>15 mins</Text>
+            <TouchableOpacity
+              style={styles.timeSingleCard}
+              onPress={() => setDeliveryTime("15")}
+            >
+              <Text style={styles.timeText}>15 mins</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.timeSingleCard} onPress={()=>setDeliveryTime("30")}>
-              <Text style={styles.quantity}>30 mins</Text>
+            <TouchableOpacity
+              style={styles.timeSingleCard}
+              onPress={() => setDeliveryTime("30")}
+            >
+              <Text style={styles.timeText}>30 mins</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.timeSingleCard} onPress={()=>setDeliveryTime("60")}>
-              <Text style={styles.quantity}>1 hour</Text>
+            <TouchableOpacity
+              style={styles.timeSingleCard}
+              onPress={() => setDeliveryTime("60")}
+            >
+              <Text style={styles.timeText}>1 hour</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.containerPicker}>
-          <Text style={styles.selectLabel}>Select a Rider</Text>
+            <Text style={styles.selectLabel}>Select a Rider</Text>
             <Picker
               selectedValue={rider}
-              onValueChange={(itemValue, itemIndex) =>
-                setRider(itemValue)
-              }
+              onValueChange={(itemValue, itemIndex) => setRider(itemValue)}
               style={styles.picker}
             >
               <Picker.Item label="Peter Hudson" value="Peter Hudson" />
@@ -208,6 +215,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
+    color: "#000",
     gap: 15,
   },
   timeSingleCard: {
@@ -217,19 +225,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 80,
     borderWidth: 0.5,
-    backgroundColor: "rgba(255, 223, 0, 0.1)",
+    backgroundColor: "#FFDF00",
     borderColor: "#FFDF00",
     borderRadius: 4,
     padding: 5,
   },
+  timeText: {
+    color: "#000",
+  },
   containerPicker: {
     width: "100%",
     paddingTop: 20,
-
   },
-  selectLabel : {
+  selectLabel: {
     marginBottom: 10,
-    color: "#fff"
+    color: "#fff",
   },
   picker: {
     height: 40,

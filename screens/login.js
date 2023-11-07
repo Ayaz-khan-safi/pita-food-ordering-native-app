@@ -7,10 +7,12 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Snackbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { useLoginUserMutation } from "../services/login-api";
+import { useUserLoginMutation } from "../services/loginApi";
 import * as SecureStore from "expo-secure-store";
 
 export default function Login() {
@@ -22,7 +24,7 @@ export default function Login() {
   );
 
   const navigation = useNavigation();
-  const [mutation] = useLoginUserMutation();
+  const [mutation] = useUserLoginMutation();
 
   const handleLogin = () => {
     console.log(email, " ", pass);
@@ -49,48 +51,52 @@ export default function Login() {
   };
 
   return (
-    <ImageBackground
-      source={require("../assets/bg-img.jpg")}
-      style={styles.backgroundImage}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior="height"
+      keyboardVerticalOffset={Platform.OS === "android" ? -80 : 0}
     >
-      <View style={styles.overlay}>
-        <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>Pita Burger Master</Text>
+      <ImageBackground
+        source={require("../assets/bg-img.jpg")}
+        style={styles.backgroundImage}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.formContainer}>
+            <View style={styles.headingContainer}>
+              <Text style={styles.headingText}>Pita Burger Master</Text>
+            </View>
+            <View style={styles.container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                onChangeText={setEmail}
+                placeholderTextColor="#000"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#000"
+                onChangeText={setPass}
+                secureTextEntry={true}
+              />
+              <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Login</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        <View style={styles.container}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            onChangeText={setEmail}
-            placeholderTextColor="#000"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#000"
-            onChangeText={setPass}
-            secureTextEntry={true}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ImageBackground>
       <Snackbar
         visible={isSnackBarVisible}
         onDismiss={() => {
           setIsSnackBarVisible(false);
         }}
         duration={5000}
-        style={{
-          backgroundColor: "#F00",
-          marginBottom: "120%",
-          marginHorizontal: 40,
-        }}
+        style={styles.snackBar}
       >
         {snackBarMessage}
       </Snackbar>
-    </ImageBackground>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -106,7 +112,6 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: 40,
-    paddingBottom: 50,
   },
   input: {
     height: 50,
@@ -127,12 +132,22 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 18,
   },
-  headingContainer: {
-    marginBottom: 100,
-  },
+  headingContainer: {},
   headingText: {
     color: "#fff",
     fontSize: 34,
     textAlign: "center",
+  },
+  formContainer: {
+    flexDirection: "column",
+    gap: 60,
+    position: "relative",
+    bottom: 100,
+  },
+  snackBar: {
+    backgroundColor: "#F00",
+    marginHorizontal: 40,
+    position: "fixed",
+    bottom: 30,
   },
 });

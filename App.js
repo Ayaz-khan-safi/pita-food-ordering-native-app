@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet, Text, View } from "react-native";
 import Login from "./screens/login";
-import Dashboard from "./screens/dashboard";
+import Dashboard from "./screens/overAllDetails";
 import PendingOrders from "./screens/pendingOrders";
 import DeliveredOrders from "./screens/deliveredOrders";
 import AppHeader from "./components/appHeader";
@@ -30,7 +30,7 @@ function AppComponent() {
         <Stack.Screen
           name="dashboard"
           component={Dashboard}
-          options={{ title: "Dashbaord" }}
+          options={{ title: "Dashboard" }}
         />
         <Stack.Screen
           name="deliveredOrders"

@@ -10,17 +10,27 @@ import {
 import dummyData from "../data/dummy";
 import OrderCard from "../components/orderCard";
 import { useNavigation } from "@react-navigation/native";
-
+import { useAllOrdersQuery } from "../services/ordersApi";
 
 export default function PendingOrders() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+
+  const { data: orders } = useAllOrdersQuery();
+  console.log(orders?.data?.result);
+
+  const allPendingOrders = orders?.data?.result
+    ? orders?.data?.result.filter((order) => order.orderStatus === "PENDING")
+    : 0;
+
+  console.log(allPendingOrders);
+
   const deliveredOrdersList = dummyData.filter(
     (item) => item.status === "pending"
   );
 
   const handleCardClick = (item) => {
-    console.log('Card clicked:', item);
-    navigation.navigate('orderDetails',{id: item.id})
+    console.log("Card clicked:", item);
+    navigation.navigate("orderDetails", { id: item._id });
   };
 
   const renderOrderCard = ({ item }) => {
@@ -37,10 +47,10 @@ export default function PendingOrders() {
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-        <FlatList
-            data={deliveredOrdersList}
+          <FlatList
+            data={allPendingOrders}
             renderItem={renderOrderCard}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id}
           />
         </View>
       </View>
