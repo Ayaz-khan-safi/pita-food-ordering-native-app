@@ -69,12 +69,14 @@ export default function Login() {
               <TextInput
                 style={styles.input}
                 placeholder="Email"
+                value={email}
                 onChangeText={setEmail}
                 placeholderTextColor="#000"
               />
               <TextInput
                 style={styles.input}
                 placeholder="Password"
+                value={pass}
                 placeholderTextColor="#000"
                 onChangeText={setPass}
                 secureTextEntry={true}
