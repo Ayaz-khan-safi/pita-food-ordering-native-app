@@ -10,14 +10,23 @@ import {
 import OrderCard from "../components/orderCard";
 import dummyData from "../data/dummy";
 import { useNavigation } from "@react-navigation/native";
-
+import { useAllOrdersQuery } from "../services/ordersApi";
 
   export default function DeliveredOrders() {
     const navigation = useNavigation()
-    const deliveredOrdersList = dummyData.filter(
-      (item) => item.status === "delivered"
-    );
+    // const deliveredOrdersList = dummyData.filter(
+    //   (item) => item.status === "delivered"
+    // );
   
+
+    const { data: orders } = useAllOrdersQuery();
+    console.log(orders?.data?.result);
+  
+    const deliveredOrdersList = orders?.data?.result
+      ? orders?.data?.result.filter((order) => order.orderStatus === "PENDING")
+      : 0;
+  
+    console.log(deliveredOrdersList);
     const handleCardClick = (item) => {
       console.log('Card clicked:', item);
       navigation.navigate('orderDetails',{id: item.id})

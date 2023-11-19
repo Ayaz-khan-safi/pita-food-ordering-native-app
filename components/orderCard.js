@@ -100,6 +100,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
   },
+  statusContainerAccepted: {
+    position: "absolute",
+    top: 15,
+    left: 15,
+    backgroundColor: "green",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  statusTextAccepted: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+  },
   totalContainer: {
     position: "absolute",
     top: 2,

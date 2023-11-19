@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 const ordersAPI = createApi({
   reducerPath: "orders",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://657d-116-71-186-216.ngrok.io",
+    baseUrl: "https://2d9b-182-191-129-82.ngrok.io/",
     prepareHeaders: async (headers) => {
       const token = await SecureStore.getItemAsync("token");
       headers.set("Authorization", `Bearer ${token}`);
