@@ -36,15 +36,16 @@ export default function Dashboard() {
     : 0;
 
   const pendingOrders = () => {
-    navigation.navigate("pendingOrders");
+    navigation.navigate("dynamic", { dynamicData: 'PENDING' });
   };
   const deliveredOrders = () => {
-    navigation.navigate("deliveredOrders");
+    navigation.navigate("dynamic", { dynamicData: 'DELIVERED' });
+
   };
 
   const handleCardClick = (item) => {
-    console.log('Card clicked:', item);
-    navigation.navigate('orderDetails',{id: item.id})
+    console.log("Card clicked 1:", item._id);
+    navigation.navigate("orderDetails", { id: item._id });
   };
 
   const renderOrderCard = ({ item }) => {
@@ -60,19 +61,28 @@ export default function Dashboard() {
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
-      
         <View style={styles.containerDetails}>
           <Text style={styles.totalText}>
             Total Orders: {orders?.data?.metadata?.total}
           </Text>
-          <Text style={styles.detailsText}>
-            Newly Created: {allCreatedOrders}
-          </Text>
-          <Text style={styles.detailsText}>Accepted: {allAcceptedOrders}</Text>
+          <View>
+            <Text style={styles.detailsText}>
+              Newly Created: {allCreatedOrders}
+            </Text>
+            <Text style={styles.detailsText}>
+              Accepted: {allAcceptedOrders}
+            </Text>
+            <Text style={styles.detailsText}>
+            Pending: {allPendingOrders}
+            </Text>
+            <Text style={styles.detailsText}>
+            Delivered: {allDeliveredOrders}
+            </Text>
+          </View>
         </View>
         <View style={styles.containerFlatList}>
           <FlatList
-          style={styles.flatList}
+            style={styles.flatList}
             data={orders?.data?.result}
             renderItem={renderOrderCard}
             keyExtractor={(item) => item.id}
@@ -106,7 +116,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 2,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
     justifyContent: "flex-end",
   },
   container: {
@@ -116,7 +126,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingBottom: 20,
   },
-  containerFlatList :{
+  containerFlatList: {
     display: "flex",
     borderRadius: 12,
     flexDirection: "column",
@@ -125,7 +135,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingBottom: 20,
   },
-  containerDetails : {
+  containerDetails: {
     display: "flex",
     flexDirection: "column",
     gap: 10,
@@ -144,7 +154,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#000",
-    fontSize: 18,
+    fontSize: 14,
   },
   deliveredButton: {
     display: "flex",
@@ -161,14 +171,14 @@ const styles = StyleSheet.create({
   },
   deliveredButtonText: {
     color: "#FFDF00",
-    fontSize: 18,
+    fontSize: 14,
   },
   detailsText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#FFF",
   },
   totalText: {
-    fontSize: 36,
+    fontSize: 20,
     color: "#FFDF00",
   },
   flatList: {

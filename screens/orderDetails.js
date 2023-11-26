@@ -6,19 +6,24 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  FlatList,
 } from "react-native";
 import dummyData from "../data/dummy";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
+import { useFindOneOrderQuery } from "../services/ordersApi";
 
 export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
   const [deliveryTime, setDeliveryTime] = useState("");
   const route = useRoute();
-  const { id } = route.params;
-  const filteredItem = dummyData.filter((item) => item.id === id);
+  const dynamicID = route.params?.id;
 
-  console.log("Id", filteredItem);
+  const { data: singleData } = useFindOneOrderQuery({ id: dynamicID });
+
+  const filteredItem = dummyData.filter((item) => item.id === dynamicID);
+
+  console.log("is", singleData);
   const handleAssignRider = () => {
     console.log("Rider assigned!");
   };
@@ -31,38 +36,45 @@ export default function OrderDetailsScreen() {
       <View style={styles.overlay}>
         <View style={styles.container}>
           <View style={styles.statusContainer}>
-            <Text style={styles.status}>Delivery Pending</Text>
+            <Text style={styles.status}>{singleData?.data?.orderStatus}</Text>
           </View>
           <View style={styles.orderIdContainer}>
-            <Text style={styles.orderId}>Order ID: {filteredItem[0]?.id}</Text>
+            <Text style={styles.orderId}>
+              Order ID: {singleData?.data?._id}
+            </Text>
           </View>
-          {filteredItem[0]?.type === "pizza" ? (
-            <Image
-              source={require(`../assets/OrderCardImage/pizzaImage.png`)}
-              style={styles.image}
-            />
-          ) : (
-            <Image
-              source={require("../assets/OrderCardImage/burgerImage.png")}
-              style={styles.image}
-            />
-          )}
+          <Text style={styles.header}>Order Details</Text>
+          <FlatList
+            data={singleData?.data}
+            keyExtractor={(item) => item.productId}
+            renderItem={({ item }) => (
+              <View style={styles.row}>
+                <Text style={styles.cell}>{item.productName}</Text>
+                <Text style={styles.cell}>{item.productPrice}</Text>
+                <Text style={styles.cell}>{item.productQuantity}</Text>
+                <Text style={styles.cell}>{item.productSubTotal}</Text>
+                <Text style={styles.cell}>{item.productTotal}</Text>
+              </View>
+            )}
+          />
           <View style={styles.orderInfoContainer}>
-            <Text style={styles.type}>{filteredItem[0]?.type}</Text>
+            <Text style={styles.type}>{singleData?.data?._id}</Text>
           </View>
           <View style={styles.customerInfoContainer}>
             <Text style={styles.customerName}>
               Customer: {filteredItem[0]?.customerName}
             </Text>
             <Text style={styles.address}>{filteredItem[0]?.address}</Text>
-            <Text style={styles.price}>Price: ${filteredItem[0]?.price}</Text>
+            <Text style={styles.price}>
+              Price: ${singleData?.data?.productPrice}
+            </Text>
             <Text style={styles.quantity}>
-              Quantity: {filteredItem[0]?.quantity}
+              Quantity: {singleData?.data?.orderDetails?.productQuantity}
             </Text>
           </View>
           <View style={styles.orderDetailsContainer}>
             <Text style={styles.TotalPrice}>
-              Total: ${filteredItem[0]?.quantity * filteredItem[0]?.price}
+              Total: ${singleData?.data?.totalAmount}
             </Text>
           </View>
           <View style={styles.timeCards}>
@@ -102,7 +114,7 @@ export default function OrderDetailsScreen() {
               style={[styles.button, { backgroundColor: "green" }]}
               onPress={handleAssignRider}
             >
-              <Text style={styles.buttonText}>Process the order</Text>
+              <Text style={styles.buttonText}>Process and Print</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -247,5 +259,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#000",
     borderRadius: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#fff',
+    paddingVertical: 8,
+  },
+  cell: {
+    flex: 1,
+    padding: 8,
+    textAlign: 'center',
   },
 });

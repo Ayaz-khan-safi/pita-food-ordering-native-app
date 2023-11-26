@@ -11,25 +11,25 @@ import dummyData from "../data/dummy";
 import OrderCard from "../components/orderCard";
 import { useNavigation } from "@react-navigation/native";
 import { useAllOrdersQuery } from "../services/ordersApi";
+import { useRoute } from '@react-navigation/native';
 
-export default function PendingOrders() {
+export default function DynamicOrders() {
+  const route = useRoute();
+  const dynamicData = route.params?.dynamicData;
   const navigation = useNavigation();
 
   const { data: orders } = useAllOrdersQuery();
   console.log(orders?.data?.result);
 
-  const allPendingOrders = orders?.data?.result
-    ? orders?.data?.result.filter((order) => order.orderStatus === "PENDING")
+  const dynamicOrdersDisplay = orders?.data?.result
+    ? orders?.data?.result.filter((order) => order.orderStatus === dynamicData)
     : 0;
 
-  console.log(allPendingOrders);
+  console.log(dynamicOrdersDisplay);
 
-  const deliveredOrdersList = dummyData.filter(
-    (item) => item.status === "pending"
-  );
 
   const handleCardClick = (item) => {
-    console.log("Card clicked:", item);
+    console.log("Card clicked 2:", item._id);
     navigation.navigate("orderDetails", { id: item._id });
   };
 
@@ -48,7 +48,7 @@ export default function PendingOrders() {
       <View style={styles.overlay}>
         <View style={styles.container}>
           <FlatList
-            data={allPendingOrders}
+            data={dynamicOrdersDisplay}
             renderItem={renderOrderCard}
             keyExtractor={(item) => item._id}
           />
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 2,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
     justifyContent: "center",
   },
   container: {

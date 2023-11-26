@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 const ordersAPI = createApi({
   reducerPath: "orders",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://2d9b-182-191-129-82.ngrok.io/",
+    baseUrl: "https://701b-116-71-182-193.ngrok.io/",
     prepareHeaders: async (headers) => {
       const token = await SecureStore.getItemAsync("token");
       headers.set("Authorization", `Bearer ${token}`);
@@ -14,12 +14,18 @@ const ordersAPI = createApi({
   endpoints: (builder) => ({
     allOrders: builder.query({
       query: () => ({
-        url: "/orders/findAll",
+        url: "/orders/findAll?page=1&limit=100",
         method: "GET",
       }),
     }),
+    findOneOrder: builder.query({
+      query: ({id})=> ({
+        url: `/orders/findOne/${id}`,
+        method: 'GET'
+      })
+    })
   }),
 });
 
-export const { useAllOrdersQuery } = ordersAPI;
+export const { useAllOrdersQuery, useFindOneOrderQuery } = ordersAPI;
 export default ordersAPI;

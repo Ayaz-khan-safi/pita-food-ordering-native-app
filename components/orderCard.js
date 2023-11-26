@@ -75,8 +75,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "green",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
     borderRadius: 8,
   },
   statusTextDelireved: {
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   statusTextAccepted: {
     color: "white",
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     textTransform: "uppercase",
   },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   totalText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
     textTransform: "uppercase",
     textShadowColor: "green",
