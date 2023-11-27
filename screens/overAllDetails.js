@@ -36,11 +36,10 @@ export default function Dashboard() {
     : 0;
 
   const pendingOrders = () => {
-    navigation.navigate("dynamic", { dynamicData: 'PENDING' });
+    navigation.navigate("dynamic", { dynamicData: "PENDING" });
   };
   const deliveredOrders = () => {
-    navigation.navigate("dynamic", { dynamicData: 'DELIVERED' });
-
+    navigation.navigate("dynamic", { dynamicData: "DELIVERED" });
   };
 
   const handleCardClick = (item) => {
@@ -50,7 +49,7 @@ export default function Dashboard() {
 
   const renderOrderCard = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => handleCardClick(item)}>
+      <TouchableOpacity activeOpacity={1} onPress={() => handleCardClick(item)}>
         <OrderCard item={item} />
       </TouchableOpacity>
     );
@@ -72,11 +71,9 @@ export default function Dashboard() {
             <Text style={styles.detailsText}>
               Accepted: {allAcceptedOrders}
             </Text>
+            <Text style={styles.detailsText}>Pending: {allPendingOrders}</Text>
             <Text style={styles.detailsText}>
-            Pending: {allPendingOrders}
-            </Text>
-            <Text style={styles.detailsText}>
-            Delivered: {allDeliveredOrders}
+              Delivered: {allDeliveredOrders}
             </Text>
           </View>
         </View>
@@ -89,7 +86,11 @@ export default function Dashboard() {
           />
         </View>
         <View style={styles.container}>
-          <TouchableOpacity style={styles.button} onPress={pendingOrders}>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.3}
+            onPress={pendingOrders}
+          >
             <Text style={styles.buttonText}>Pending Orders</Text>
             <Text style={styles.buttonText}>{allPendingOrders}</Text>
           </TouchableOpacity>

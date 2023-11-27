@@ -12,10 +12,11 @@ import dummyData from "../data/dummy";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { useFindOneOrderQuery } from "../services/ordersApi";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
-  const [deliveryTime, setDeliveryTime] = useState("");
+  const [deliveryTime, setDeliveryTime] = useState(0);
   const route = useRoute();
   const dynamicID = route.params?.id;
 
@@ -23,7 +24,7 @@ export default function OrderDetailsScreen() {
 
   const filteredItem = dummyData.filter((item) => item.id === dynamicID);
 
-  console.log("is", singleData);
+  console.log(singleData?.data);
   const handleAssignRider = () => {
     console.log("Rider assigned!");
   };
@@ -40,62 +41,98 @@ export default function OrderDetailsScreen() {
           </View>
           <View style={styles.orderIdContainer}>
             <Text style={styles.orderId}>
-              Order ID: {singleData?.data?._id}
+              Order Type: {singleData?.data?.orderDeliverType}
             </Text>
-          </View>
-          <Text style={styles.header}>Order Details</Text>
-          <FlatList
-            data={singleData?.data}
-            keyExtractor={(item) => item.productId}
-            renderItem={({ item }) => (
-              <View style={styles.row}>
-                <Text style={styles.cell}>{item.productName}</Text>
-                <Text style={styles.cell}>{item.productPrice}</Text>
-                <Text style={styles.cell}>{item.productQuantity}</Text>
-                <Text style={styles.cell}>{item.productSubTotal}</Text>
-                <Text style={styles.cell}>{item.productTotal}</Text>
-              </View>
-            )}
-          />
-          <View style={styles.orderInfoContainer}>
-            <Text style={styles.type}>{singleData?.data?._id}</Text>
           </View>
           <View style={styles.customerInfoContainer}>
-            <Text style={styles.customerName}>
-              Customer: {filteredItem[0]?.customerName}
-            </Text>
-            <Text style={styles.address}>{filteredItem[0]?.address}</Text>
-            <Text style={styles.price}>
-              Price: ${singleData?.data?.productPrice}
-            </Text>
-            <Text style={styles.quantity}>
-              Quantity: {singleData?.data?.orderDetails?.productQuantity}
-            </Text>
+            <Text style={styles.itemList}>Order Details</Text>
+            <FlatList
+              data={singleData?.data?.orderDetails}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => (
+                <>
+                  <Text style={styles.address}>{item?.productName}</Text>
+                  <FlatList
+                    data={item.addons}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item }) => (
+                      <Text style={styles.address}>{item?.addonName}</Text>
+                    )}
+                  />
+                </>
+              )}
+            />
           </View>
-          <View style={styles.orderDetailsContainer}>
+          <View style={styles.customerInfoContainer}>
+            <Text style={styles.address}>
+              Address:{" "}
+              {`${singleData?.data?.street} ${singleData?.data?.address}`}
+            </Text>
+            <Text style={styles.customerName}>
+              Tax: {singleData?.data?.taxAmount}
+            </Text>
             <Text style={styles.TotalPrice}>
               Total: ${singleData?.data?.totalAmount}
             </Text>
           </View>
-          <View style={styles.timeCards}>
-            <TouchableOpacity
-              style={styles.timeSingleCard}
-              onPress={() => setDeliveryTime("15")}
-            >
-              <Text style={styles.timeText}>15 mins</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.timeSingleCard}
-              onPress={() => setDeliveryTime("30")}
-            >
-              <Text style={styles.timeText}>30 mins</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.timeSingleCard}
-              onPress={() => setDeliveryTime("60")}
-            >
-              <Text style={styles.timeText}>1 hour</Text>
-            </TouchableOpacity>
+          <View>
+            <Text style={styles.selectLabel}>
+              Select Expected Delivery Time:
+            </Text>
+            <View style={styles.timeCards}>
+              <TouchableOpacity
+                style={styles.timeSingleCard}
+                activeOpacity={1}
+                onPress={() => setDeliveryTime(15)}
+              >
+                {deliveryTime === 15 ? (
+                  <Ionicons
+                    name="checkmark-circle-sharp"
+                    size={30}
+                    color="green"
+                    style={styles.checkIcon}
+                  />
+                ) : (
+                  ""
+                )}
+
+                <Text style={styles.timeText}>15 mins</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.timeSingleCard}
+                activeOpacity={1}
+                onPress={() => setDeliveryTime(30)}
+              >
+                {deliveryTime === 30 ? (
+                  <Ionicons
+                    name="checkmark-circle-sharp"
+                    size={30}
+                    color="green"
+                    style={styles.checkIcon}
+                  />
+                ) : (
+                  ""
+                )}
+                <Text style={styles.timeText}>30 mins</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.timeSingleCard}
+                activeOpacity={1}
+                onPress={() => setDeliveryTime(60)}
+              >
+                {deliveryTime === 60 ? (
+                  <Ionicons
+                    name="checkmark-circle-sharp"
+                    size={30}
+                    color="green"
+                    style={styles.checkIcon}
+                  />
+                ) : (
+                  ""
+                )}
+                <Text style={styles.timeText}>1 hour</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.containerPicker}>
             <Text style={styles.selectLabel}>Select a Rider</Text>
@@ -114,7 +151,10 @@ export default function OrderDetailsScreen() {
               style={[styles.button, { backgroundColor: "green" }]}
               onPress={handleAssignRider}
             >
-              <Text style={styles.buttonText}>Process and Print</Text>
+              <Text style={styles.buttonText}>
+                Process and Print{" "}
+                <Ionicons name="arrow-forward-sharp" size={14} color="white" />
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -144,11 +184,11 @@ const styles = StyleSheet.create({
   },
   orderIdContainer: {
     position: "absolute",
-    top: 50,
+    top: 30,
     left: 10,
   },
   orderId: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
     color: "white",
   },
@@ -160,41 +200,41 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     position: "absolute",
-    top: 50,
+    top: 30,
     right: 10,
   },
   status: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
     textTransform: "uppercase",
     color: "red",
   },
   customerInfoContainer: {
-    marginBottom: 20,
-    color: "red",
+    flexDirection: "column",
+    gap: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e2e2",
+    width: "100%",
+    marginBottom: 30,
   },
   customerName: {
-    fontSize: 16,
+    fontSize: 12,
     color: "white",
   },
   address: {
-    fontSize: 16,
-    color: "white",
-  },
-  orderDetailsContainer: {
-    marginBottom: 20,
+    fontSize: 14,
     color: "white",
   },
   quantity: {
-    fontSize: 16,
+    fontSize: 14,
     color: "white",
   },
   price: {
-    fontSize: 16,
+    fontSize: 14,
     color: "white",
   },
   TotalPrice: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 5,
     color: "white",
@@ -220,7 +260,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
   },
   timeCards: {
@@ -235,19 +275,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    height: 80,
+    height: 60,
     borderWidth: 0.5,
     backgroundColor: "#FFDF00",
     borderColor: "#FFDF00",
     borderRadius: 4,
     padding: 5,
   },
+  checkIcon: {
+    position: "absolute",
+    top: -10,
+  },
   timeText: {
     color: "#000",
   },
   containerPicker: {
     width: "100%",
-    paddingTop: 20,
+    paddingTop: 10,
   },
   selectLabel: {
     marginBottom: 10,
@@ -260,16 +304,7 @@ const styles = StyleSheet.create({
     color: "#000",
     borderRadius: 5,
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: '#fff',
-    paddingVertical: 8,
-  },
-  cell: {
-    flex: 1,
-    padding: 8,
-    textAlign: 'center',
+  itemList: {
+    color: "#fff",
   },
 });

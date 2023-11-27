@@ -11,7 +11,7 @@ import dummyData from "../data/dummy";
 import OrderCard from "../components/orderCard";
 import { useNavigation } from "@react-navigation/native";
 import { useAllOrdersQuery } from "../services/ordersApi";
-import { useRoute } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
 
 export default function DynamicOrders() {
   const route = useRoute();
@@ -27,7 +27,6 @@ export default function DynamicOrders() {
 
   console.log(dynamicOrdersDisplay);
 
-
   const handleCardClick = (item) => {
     console.log("Card clicked 2:", item._id);
     navigation.navigate("orderDetails", { id: item._id });
@@ -35,7 +34,10 @@ export default function DynamicOrders() {
 
   const renderOrderCard = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => handleCardClick(item)}>
+      <TouchableOpacity
+        delayPressOut={500}
+        onPress={() => handleCardClick(item)}
+      >
         <OrderCard item={item} />
       </TouchableOpacity>
     );
