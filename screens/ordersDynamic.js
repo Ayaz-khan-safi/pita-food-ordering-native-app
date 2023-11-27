@@ -19,16 +19,12 @@ export default function DynamicOrders() {
   const navigation = useNavigation();
 
   const { data: orders } = useAllOrdersQuery();
-  console.log(orders?.data?.result);
 
   const dynamicOrdersDisplay = orders?.data?.result
     ? orders?.data?.result.filter((order) => order.orderStatus === dynamicData)
     : 0;
 
-  console.log(dynamicOrdersDisplay);
-
   const handleCardClick = (item) => {
-    console.log("Card clicked 2:", item._id);
     navigation.navigate("orderDetails", { id: item._id });
   };
 
@@ -52,7 +48,7 @@ export default function DynamicOrders() {
           <FlatList
             data={dynamicOrdersDisplay}
             renderItem={renderOrderCard}
-            keyExtractor={(item) => item._id}
+            keyExtractor={(item, idx) => idx}
           />
         </View>
       </View>

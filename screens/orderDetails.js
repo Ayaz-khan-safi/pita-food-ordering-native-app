@@ -18,17 +18,16 @@ export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
   const [deliveryTime, setDeliveryTime] = useState(0);
   const route = useRoute();
+
   const dynamicID = route.params?.id;
 
   const { data: singleData } = useFindOneOrderQuery({ id: dynamicID });
 
-  const filteredItem = dummyData.filter((item) => item.id === dynamicID);
-
   console.log(singleData?.data);
+
   const handleAssignRider = () => {
-    console.log("Rider assigned!");
+    console.log("Rider assigned!", deliveryTime);
   };
-  console.log(deliveryTime);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -44,107 +43,110 @@ export default function OrderDetailsScreen() {
               Order Type: {singleData?.data?.orderDeliverType}
             </Text>
           </View>
-          <View style={styles.customerInfoContainer}>
-            <Text style={styles.itemList}>Order Details</Text>
+          <View style={styles.orderInfoContainer}>
+            <Text style={styles.selectLabel}>ORDER DETAILS</Text>
             <FlatList
               data={singleData?.data?.orderDetails}
-              keyExtractor={(item) => item._id}
+              keyExtractor={(item, idx) => idx}
               renderItem={({ item }) => (
                 <>
-                  <Text style={styles.address}>{item?.productName}</Text>
-                  <FlatList
-                    data={item.addons}
-                    keyExtractor={(item) => item._id}
-                    renderItem={({ item }) => (
-                      <Text style={styles.address}>{item?.addonName}</Text>
-                    )}
-                  />
+                  <Text style={styles.orderItemText}>{item?.productName}</Text>
+                  <View style={styles.addonsList}>
+                    <Text style={styles.addonsText}>ADDONS: </Text>
+                    {item?.addons.map((item, idx) => (
+                      <Text key={idx} style={styles.addonsText}>
+                        {item?.addonName}
+                      </Text>
+                    ))}
+                  </View>
                 </>
               )}
             />
           </View>
           <View style={styles.customerInfoContainer}>
-            <Text style={styles.address}>
+            <Text style={styles.custInfoText}>
               Address:{" "}
               {`${singleData?.data?.street} ${singleData?.data?.address}`}
             </Text>
-            <Text style={styles.customerName}>
+            <Text style={styles.custInfoText}>
               Tax: {singleData?.data?.taxAmount}
             </Text>
             <Text style={styles.TotalPrice}>
               Total: ${singleData?.data?.totalAmount}
             </Text>
           </View>
-          <View>
-            <Text style={styles.selectLabel}>
-              Select Expected Delivery Time:
-            </Text>
-            <View style={styles.timeCards}>
-              <TouchableOpacity
-                style={styles.timeSingleCard}
-                activeOpacity={1}
-                onPress={() => setDeliveryTime(15)}
-              >
-                {deliveryTime === 15 ? (
-                  <Ionicons
-                    name="checkmark-circle-sharp"
-                    size={30}
-                    color="green"
-                    style={styles.checkIcon}
-                  />
-                ) : (
-                  ""
-                )}
-
-                <Text style={styles.timeText}>15 mins</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.timeSingleCard}
-                activeOpacity={1}
-                onPress={() => setDeliveryTime(30)}
-              >
-                {deliveryTime === 30 ? (
-                  <Ionicons
-                    name="checkmark-circle-sharp"
-                    size={30}
-                    color="green"
-                    style={styles.checkIcon}
-                  />
-                ) : (
-                  ""
-                )}
-                <Text style={styles.timeText}>30 mins</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.timeSingleCard}
-                activeOpacity={1}
-                onPress={() => setDeliveryTime(60)}
-              >
-                {deliveryTime === 60 ? (
-                  <Ionicons
-                    name="checkmark-circle-sharp"
-                    size={30}
-                    color="green"
-                    style={styles.checkIcon}
-                  />
-                ) : (
-                  ""
-                )}
-                <Text style={styles.timeText}>1 hour</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
           <View style={styles.containerPicker}>
-            <Text style={styles.selectLabel}>Select a Rider</Text>
-            <Picker
-              selectedValue={rider}
-              onValueChange={(itemValue, itemIndex) => setRider(itemValue)}
-              style={styles.picker}
-            >
-              <Picker.Item label="Peter Hudson" value="Peter Hudson" />
-              <Picker.Item label="David Screw" value="David Screw" />
-              <Picker.Item label="Andre Pen" value="Andre Pen" />
-            </Picker>
+            <View>
+              <Text style={styles.selectLabel}>
+                Select Expected Delivery Time:
+              </Text>
+              <View style={styles.timeCards}>
+                <TouchableOpacity
+                  style={styles.timeSingleCard}
+                  activeOpacity={1}
+                  onPress={() => setDeliveryTime(15)}
+                >
+                  {deliveryTime === 15 ? (
+                    <Ionicons
+                      name="checkmark-circle-sharp"
+                      size={30}
+                      color="green"
+                      style={styles.checkIcon}
+                    />
+                  ) : (
+                    ""
+                  )}
+
+                  <Text style={styles.timeText}>15 mins</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.timeSingleCard}
+                  activeOpacity={1}
+                  onPress={() => setDeliveryTime(30)}
+                >
+                  {deliveryTime === 30 ? (
+                    <Ionicons
+                      name="checkmark-circle-sharp"
+                      size={30}
+                      color="green"
+                      style={styles.checkIcon}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <Text style={styles.timeText}>30 mins</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.timeSingleCard}
+                  activeOpacity={1}
+                  onPress={() => setDeliveryTime(60)}
+                >
+                  {deliveryTime === 60 ? (
+                    <Ionicons
+                      name="checkmark-circle-sharp"
+                      size={30}
+                      color="green"
+                      style={styles.checkIcon}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <Text style={styles.timeText}>1 hour</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View>
+              <Text style={styles.selectLabel}>Select a Rider</Text>
+              <Picker
+                selectedValue={rider}
+                onValueChange={(itemValue, itemIndex) => setRider(itemValue)}
+                style={styles.picker}
+              >
+                <Picker.Item label="Peter Hudson" value="Peter Hudson" />
+                <Picker.Item label="David Screw" value="David Screw" />
+                <Picker.Item label="Andre Pen" value="Andre Pen" />
+              </Picker>
+            </View>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -179,9 +181,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 20,
   },
-  orderInfoContainer: {
-    marginBottom: 20,
-  },
   orderIdContainer: {
     position: "absolute",
     top: 30,
@@ -190,12 +189,6 @@ const styles = StyleSheet.create({
   orderId: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "white",
-  },
-  type: {
-    fontSize: 56,
-    fontWeight: "bold",
-    textTransform: "uppercase",
     color: "white",
   },
   statusContainer: {
@@ -209,27 +202,36 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "red",
   },
+  orderInfoContainer: {
+    flexDirection: "column",
+    gap: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e2e2",
+    width: "100%",
+    paddingVertical: 10,
+  },
   customerInfoContainer: {
     flexDirection: "column",
     gap: 5,
     borderBottomWidth: 1,
     borderBottomColor: "#e2e2e2",
     width: "100%",
-    marginBottom: 30,
+    paddingVertical: 10,
   },
-  customerName: {
-    fontSize: 12,
-    color: "white",
+  orderItemText: {
+    fontSize: 18,
+    color: "#FFDF00",
   },
-  address: {
+  addonsList: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 8,
+  },
+  addonsText: {
     fontSize: 14,
     color: "white",
   },
-  quantity: {
-    fontSize: 14,
-    color: "white",
-  },
-  price: {
+  custInfoText: {
     fontSize: 14,
     color: "white",
   },
@@ -239,13 +241,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: "white",
   },
-  image: {
-    width: 130,
-    height: 80,
-    resizeMode: "cover",
-    marginBottom: 20,
-  },
-
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -291,11 +286,13 @@ const styles = StyleSheet.create({
   },
   containerPicker: {
     width: "100%",
-    paddingTop: 10,
+    paddingVertical: 10,
+    gap: 10,
   },
   selectLabel: {
-    marginBottom: 10,
+    fontSize: 16,
     color: "#fff",
+    marginBottom: 10,
   },
   picker: {
     height: 40,
@@ -303,8 +300,5 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#000",
     borderRadius: 5,
-  },
-  itemList: {
-    color: "#fff",
   },
 });

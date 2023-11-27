@@ -43,7 +43,6 @@ export default function Dashboard() {
   };
 
   const handleCardClick = (item) => {
-    console.log("Card clicked 1:", item._id);
     navigation.navigate("orderDetails", { id: item._id });
   };
 
@@ -82,7 +81,7 @@ export default function Dashboard() {
             style={styles.flatList}
             data={orders?.data?.result}
             renderItem={renderOrderCard}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, idx) => idx}
           />
         </View>
         <View style={styles.container}>
