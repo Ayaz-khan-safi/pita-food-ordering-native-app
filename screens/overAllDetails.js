@@ -48,7 +48,7 @@ export default function Dashboard() {
 
   const renderOrderCard = ({ item }) => {
     return (
-      <TouchableOpacity activeOpacity={1} onPress={() => handleCardClick(item)}>
+      <TouchableOpacity activeOpacity={0.9} onPress={() => handleCardClick(item)}>
         <OrderCard item={item} />
       </TouchableOpacity>
     );

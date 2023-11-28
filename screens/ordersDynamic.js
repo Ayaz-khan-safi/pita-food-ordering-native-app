@@ -31,7 +31,7 @@ export default function DynamicOrders() {
   const renderOrderCard = ({ item }) => {
     return (
       <TouchableOpacity
-        delayPressOut={500}
+        activeOpacity={0.9}
         onPress={() => handleCardClick(item)}
       >
         <OrderCard item={item} />

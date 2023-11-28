@@ -3,6 +3,7 @@ import * as SecureStore from "expo-secure-store";
 
 const ordersAPI = createApi({
   reducerPath: "orders",
+  tagTypes: ["orders"],
   baseQuery: fetchBaseQuery({
     baseUrl: "https://831e-182-191-132-2.ngrok.io/",
     prepareHeaders: async (headers) => {
@@ -17,12 +18,14 @@ const ordersAPI = createApi({
         url: "/orders/findAll?page=1&limit=100",
         method: "GET",
       }),
+      providesTags: ["orders"],
     }),
     findOneOrder: builder.query({
       query: ({ id }) => ({
         url: `/orders/findOne/${id}`,
         method: "GET",
       }),
+      providesTags: ["orders"],
     }),
   }),
 });
