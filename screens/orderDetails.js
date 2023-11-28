@@ -78,19 +78,21 @@ export default function OrderDetailsScreen() {
 
           <View style={styles.orderInfoContainer}>
             <Text style={styles.selectLabel}>Order Details</Text>
-            <Table>
-              <Row data={tableHeadData} style={styles.tableHead} />
-              {tableData.map((rowData, index) => (
-                <Row
-                  key={index}
-                  data={rowData}
-                  style={[
-                    styles.tableRow,
-                    index % 2 && { backgroundColor: "#F7F6E7" },
-                  ]}
-                />
-              ))}
-            </Table>
+            {isSuccess && (
+              <Table>
+                <Row data={tableHeadData} style={styles.tableHead} />
+                {tableDataMap.map((rowData, index) => (
+                  <Row
+                    key={index}
+                    data={rowData}
+                    style={[
+                      styles.tableRow,
+                      index % 2 && { backgroundColor: "#F7F6E7" },
+                    ]}
+                  />
+                ))}
+              </Table>
+            )}
             {/* <FlatList
               data={singleData?.data?.orderDetails}
               keyExtractor={(item, idx) => idx}
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
   },
   orderIdContainer: {
     position: "absolute",
-    top: 30,
+    top: 40,
     left: 10,
   },
   orderId: {
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     position: "absolute",
-    top: 30,
+    top: 40,
     right: 10,
   },
   status: {
