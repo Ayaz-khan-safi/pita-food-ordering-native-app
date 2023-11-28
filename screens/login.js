@@ -16,8 +16,8 @@ import { useUserLoginMutation } from "../services/loginApi";
 import * as SecureStore from "expo-secure-store";
 
 export default function Login() {
-  const [email, setEmail] = useState("attzazg@gmail.com");
-  const [pass, setPass] = useState("aBC@1234567");
+  const [email, setEmail] = useState("attzaz@yopmail.com");
+  const [pass, setPass] = useState("aBC@123456");
   const [isSnackBarVisible, setIsSnackBarVisible] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState(
     "Incorrect Username OR Password. Please try again."
@@ -149,7 +149,8 @@ const styles = StyleSheet.create({
   snackBar: {
     backgroundColor: "#F00",
     marginHorizontal: 40,
-    position: "fixed",
-    bottom: 30,
+    flex: 1,
+    justifyContent: "flex-start",
+    bottom: 400,
   },
 });

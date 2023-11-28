@@ -8,8 +8,6 @@ import {
   FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector, useDispatch } from "react-redux";
-import { increment, decrement, selectCounter } from "../slices/counterSlice";
 import { useAllOrdersQuery } from "../services/ordersApi";
 import OrderCard from "../components/orderCard";
 
@@ -48,7 +46,10 @@ export default function Dashboard() {
 
   const renderOrderCard = ({ item }) => {
     return (
-      <TouchableOpacity activeOpacity={0.9} onPress={() => handleCardClick(item)}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => handleCardClick(item)}
+      >
         <OrderCard item={item} />
       </TouchableOpacity>
     );

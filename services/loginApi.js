@@ -4,7 +4,7 @@ const loginAPI = createApi({
   reducerPath: "login",
   tagTypes: ["login"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://831e-182-191-132-2.ngrok.io/",
+    baseUrl: "https://b10a-154-192-17-28.ngrok.io/",
   }),
   endpoints: (builder) => ({
     userLogin: builder.mutation({

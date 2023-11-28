@@ -8,11 +8,14 @@ import {
   ImageBackground,
   FlatList,
 } from "react-native";
+import { Table, Row } from "react-native-table-component";
 import dummyData from "../data/dummy";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { useFindOneOrderQuery } from "../services/ordersApi";
 import { Ionicons } from "@expo/vector-icons";
+
+const tableHeadData = ["Item", "Price", "SubTotal", "Total"];
 
 export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
@@ -21,16 +24,45 @@ export default function OrderDetailsScreen() {
 
   const dynamicID = route.params?.id;
 
-  const { data: singleData } = useFindOneOrderQuery({ id: dynamicID });
-
-  console.log(singleData?.data);
+  const { data: singleData, isSuccess } = useFindOneOrderQuery({
+    id: dynamicID,
+  });
 
   const handleAssignRider = () => {
     console.log("Rider assigned!", deliveryTime);
   };
+
+  // const tableDataMap = singleData?.data?.orderDetails?.map((item, idx) => [
+  //   item.productName,
+  //   item.productPrice,
+  //   item.productSubTotal,
+  //   item.productTotal,
+  // ]);
+
+  const tableDataMap =
+    isSuccess &&
+    singleData?.data?.orderDetails?.map((item, idx) => [
+      item.productName,
+      item.productPrice,
+      item.productSubTotal,
+      item.productTotal,
+    ]);
+
+  console.log(singleData?.data?.orderDetails);
+
+  console.log("tablemapped " + tableDataMap);
+
+  const tableData = [
+    ["Item 1", "$10", "$20", "$30"],
+    ["Item 2", "$15", "$25", "$40"],
+    ["Item 1", "$10", "$20", "$30"],
+    ["Item 2", "$15", "$25", "$40"],
+  ];
+
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
+      c
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
@@ -43,25 +75,46 @@ export default function OrderDetailsScreen() {
               Order Type: {singleData?.data?.orderDeliverType}
             </Text>
           </View>
+
           <View style={styles.orderInfoContainer}>
-            <Text style={styles.selectLabel}>ORDER DETAILS</Text>
-            <FlatList
+            <Text style={styles.selectLabel}>Order Details</Text>
+            <Table>
+              <Row data={tableHeadData} style={styles.tableHead} />
+              {tableData.map((rowData, index) => (
+                <Row
+                  key={index}
+                  data={rowData}
+                  style={[
+                    styles.tableRow,
+                    index % 2 && { backgroundColor: "#F7F6E7" },
+                  ]}
+                />
+              ))}
+            </Table>
+            {/* <FlatList
               data={singleData?.data?.orderDetails}
               keyExtractor={(item, idx) => idx}
               renderItem={({ item }) => (
                 <>
-                  <Text style={styles.orderItemText}>{item?.productName}</Text>
+                  <View style={styles.orderDetails}>
+                    <Text style={styles.orderItemText}>
+                      {item?.productName}
+                    </Text>
+                    <Text style={styles.orderItemText}>
+                      {item?.productPrice}
+                    </Text>
+                  </View>
                   <View style={styles.addonsList}>
                     <Text style={styles.addonsText}>ADDONS: </Text>
-                    {item?.addons.map((item, idx) => (
+                    {item?.addons?.map((item, idx) => (
                       <Text key={idx} style={styles.addonsText}>
-                        {item?.addonName}
+                        {item?.addonName},{" "}
                       </Text>
                     ))}
                   </View>
                 </>
               )}
-            />
+            /> */}
           </View>
           <View style={styles.customerInfoContainer}>
             <Text style={styles.custInfoText}>
@@ -154,7 +207,7 @@ export default function OrderDetailsScreen() {
               onPress={handleAssignRider}
             >
               <Text style={styles.buttonText}>
-                Process and Print{" "}
+                Proceed to Print{" "}
                 <Ionicons name="arrow-forward-sharp" size={14} color="white" />
               </Text>
             </TouchableOpacity>
@@ -205,10 +258,8 @@ const styles = StyleSheet.create({
   orderInfoContainer: {
     flexDirection: "column",
     gap: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e2e2e2",
     width: "100%",
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   customerInfoContainer: {
     flexDirection: "column",
@@ -217,6 +268,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "#e2e2e2",
     width: "100%",
     paddingVertical: 10,
+  },
+  orderDetails: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 8,
   },
   orderItemText: {
     fontSize: 18,
@@ -300,5 +356,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#000",
     borderRadius: 5,
+  },
+  tableHead: { height: 40, padding: 8, backgroundColor: "#FFDF00" },
+  tableText: {
+    margin: 6,
+  },
+  tableRow: {
+    flexDirection: "row",
+    backgroundColor: "#FFF1C1",
+    padding: 8,
   },
 });

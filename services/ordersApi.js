@@ -5,7 +5,7 @@ const ordersAPI = createApi({
   reducerPath: "orders",
   tagTypes: ["orders"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://831e-182-191-132-2.ngrok.io/",
+    baseUrl: "https://b10a-154-192-17-28.ngrok.io/",
     prepareHeaders: async (headers) => {
       const token = await SecureStore.getItemAsync("token");
       headers.set("Authorization", `Bearer ${token}`);

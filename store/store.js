@@ -9,10 +9,8 @@ const store = configureStore({
     [loginAPI.reducerPath]: loginAPI.reducer,
     [ordersAPI.reducerPath]: ordersAPI.reducer,
   },
-  middleware: getDefaultMiddleware().concat(
-    loginAPI.middleware,
-    ordersAPI.middleware
-  ),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(loginAPI.middleware, ordersAPI.middleware),
 });
 
 export default store;
