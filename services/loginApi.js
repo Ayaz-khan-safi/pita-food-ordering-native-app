@@ -1,21 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseAPI } from "./base-api";
+import { LOGIN } from "./tags";
 
-const loginAPI = createApi({
-  reducerPath: "login",
-  tagTypes: ["login"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://b10a-154-192-17-28.ngrok.io/",
-  }),
+export const loginAPI = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
     userLogin: builder.mutation({
       query: ({ email, pass }) => ({
         url: `/auth/login?email=${email}&password=${pass}`,
         method: "POST",
       }),
-      invalidatesTags: ["login"],
+      invalidatesTags: [LOGIN],
     }),
   }),
 });
 
 export const { useUserLoginMutation } = loginAPI;
-export default loginAPI;

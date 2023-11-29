@@ -1,34 +1,23 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import * as SecureStore from "expo-secure-store";
+import { baseAPI } from "./base-api";
+import { ORDERS } from "./tags";
 
-const ordersAPI = createApi({
-  reducerPath: "orders",
-  tagTypes: ["orders"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://b10a-154-192-17-28.ngrok.io/",
-    prepareHeaders: async (headers) => {
-      const token = await SecureStore.getItemAsync("token");
-      headers.set("Authorization", `Bearer ${token}`);
-      return headers;
-    },
-  }),
+export const ordersAPI = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
     allOrders: builder.query({
       query: () => ({
         url: "/orders/findAll?page=1&limit=100",
         method: "GET",
       }),
-      providesTags: ["orders"],
+      providesTags: [ORDERS],
     }),
     findOneOrder: builder.query({
       query: ({ id }) => ({
         url: `/orders/findOne/${id}`,
         method: "GET",
       }),
-      providesTags: ["orders"],
+      providesTags: [ORDERS],
     }),
   }),
 });
 
 export const { useAllOrdersQuery, useFindOneOrderQuery } = ordersAPI;
-export default ordersAPI;

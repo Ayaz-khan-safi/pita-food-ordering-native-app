@@ -1,16 +1,14 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import counterReducer from "../slices/counterSlice";
-import loginAPI from "../services/loginApi";
-import ordersAPI from "../services/ordersApi";
+import { baseAPI } from "../services/base-api";
 
 const store = configureStore({
   reducer: {
     counter: counterReducer,
-    [loginAPI.reducerPath]: loginAPI.reducer,
-    [ordersAPI.reducerPath]: ordersAPI.reducer,
+    [baseAPI.reducerPath]: baseAPI.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(loginAPI.middleware, ordersAPI.middleware),
+    getDefaultMiddleware().concat(baseAPI.middleware),
 });
 
 export default store;
