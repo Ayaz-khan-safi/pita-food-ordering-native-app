@@ -20,7 +20,7 @@ export default function Login() {
   const [pass, setPass] = useState("aBC@123456");
   const [isSnackBarVisible, setIsSnackBarVisible] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState(
-    "Incorrect Username OR Password. Please try again."
+    "Unable to connect to server. Please try again"
   );
 
   const navigation = useNavigation();
