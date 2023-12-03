@@ -67,7 +67,7 @@ export default function OrderDetailsScreen() {
       .catch((error) =>
         console.log("There is a problem connecting to API.", error)
       );
-      setModalVisible(!isModalVisible);
+      setIsModalVisible(!isModalVisible);
   };
   console.log("Single Data = ", singleData?.data);
 
@@ -76,7 +76,7 @@ export default function OrderDetailsScreen() {
   // console.log(userriRider);
 
   const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+    setIsModalVisible(!isModalVisible);
   };
   return (
     <ImageBackground
