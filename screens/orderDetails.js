@@ -14,10 +14,13 @@ import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
 import { EXPO_DEFAULT_BASE_URL } from "@env";
-import { useFindOneOrderQuery } from "../services/ordersApi";
+import {
+  useFindOneOrderQuery,
+  useOrderUpdateMutation,
+} from "../services/ordersApi";
 import { useUsersListQuery } from "../services/usersApi";
 
-const tableHeadData = ["Item", "Price", "SubTotal", "Total"];
+const deliveryTimeArray = [15, 30, 45, 60, "Others"];
 const windowHeight = Dimensions.get("window").height;
 
 export default function OrderDetailsScreen() {
@@ -37,18 +40,36 @@ export default function OrderDetailsScreen() {
     role: "RIDER",
   });
 
-  const singleOrderData = singleData?.data?.orderDetails;
+  const [updateOrder] = useOrderUpdateMutation();
+
   const userRider = riders?.data?.result;
 
-  const handleAssignRider = () => {
-    console.log("Rider assigned!", deliveryTime);
+  const handleAssignRider = async ()  => {
+    console.log("Rider assigned!", deliveryTime, rider);
+    const  data = await {
+      ...singleData?.data,
+      riderId: rider,
+      timing: deliveryTime,
+    };
+    console.log(data);
+    updateOrder(data)
+      .unwrap()
+      .then((response) => {
+        try {
+          console.log(response);
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .catch((error) =>
+        console.log("There is a problem connecting to API.", error)
+      );
   };
-  console.log("Single Data = ", singleData?.data?.orderDetails);
+  console.log("Single Data = ", singleData?.data);
 
-  console.log("Single Order Item = " + singleOrderData);
+  // console.log(EXPO_DEFAULT_BASE_URL);
 
-  console.log(EXPO_DEFAULT_BASE_URL);
-  console.log(userRider);
+  // console.log(userriRider);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -231,74 +252,45 @@ export default function OrderDetailsScreen() {
             </Text>
           </View>
           <View style={styles.containerPicker}>
-            <View>
-              <Text style={styles.selectLabel}>
-                Select Expected Delivery Time:
-              </Text>
-              <View style={styles.timeCards}>
-                <TouchableOpacity
-                  style={styles.timeSingleCard}
-                  activeOpacity={1}
-                  onPress={() => setDeliveryTime(15)}
+            <Text style={styles.selectLabel}>
+              Choose rider & delivery time:
+            </Text>
+            <View style={{ flexDirection: "column", gap: 15 }}>
+              <View>
+                <ScrollView
+                  horizontal={true}
+                  contentContainerStyle={styles.timeCards}
+                  showsHorizontalScrollIndicator={true}
                 >
-                  {deliveryTime === 15 ? (
-                    <Ionicons
-                      name="checkmark-circle-sharp"
-                      size={30}
-                      color="green"
-                      style={styles.checkIcon}
-                    />
-                  ) : (
-                    ""
-                  )}
+                  {deliveryTimeArray.map((time, idx) => (
+                    <TouchableOpacity
+                      style={styles.timeSingleCard}
+                      activeOpacity={1}
+                      onPress={() => setDeliveryTime(time)}
+                    >
+                      {deliveryTime === time ? (
+                        <Ionicons
+                          name="checkmark-circle-sharp"
+                          size={30}
+                          color="green"
+                          style={styles.checkIcon}
+                        />
+                      ) : (
+                        ""
+                      )}
 
-                  <Text style={styles.timeText}>15 mins</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.timeSingleCard}
-                  activeOpacity={1}
-                  onPress={() => setDeliveryTime(30)}
-                >
-                  {deliveryTime === 30 ? (
-                    <Ionicons
-                      name="checkmark-circle-sharp"
-                      size={30}
-                      color="green"
-                      style={styles.checkIcon}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  <Text style={styles.timeText}>30 mins</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.timeSingleCard}
-                  activeOpacity={1}
-                  onPress={() => setDeliveryTime(60)}
-                >
-                  {deliveryTime === 60 ? (
-                    <Ionicons
-                      name="checkmark-circle-sharp"
-                      size={30}
-                      color="green"
-                      style={styles.checkIcon}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  <Text style={styles.timeText}>1 hour</Text>
-                </TouchableOpacity>
+                      <Text style={styles.timeText}>{time}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
               </View>
-            </View>
-            <View>
-              <Text style={styles.selectLabel}>Select a Rider</Text>
               <Picker
                 selectedValue={rider}
                 onValueChange={(itemValue, itemIndex) => setRider(itemValue)}
                 style={styles.picker}
               >
-                {userRider.map((rider, idx) => (
-                  <Picker.Item label={rider.name} value={rider.name} />
+                {userRider?.map((rider, idx) => (
+                  <Picker.Item label={rider.name} value={rider._id} />
                 ))}
               </Picker>
             </View>
@@ -417,11 +409,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   timeCards: {
-    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
-    color: "#000",
-    gap: 15,
+    paddingVertical: 5,
   },
   timeSingleCard: {
     flexGrow: 1,
@@ -429,11 +418,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 60,
+    width: 120,
     borderWidth: 0.5,
     backgroundColor: "#FFDF00",
     borderColor: "#FFDF00",
     borderRadius: 4,
     padding: 5,
+    marginRight: 10,
   },
   checkIcon: {
     position: "absolute",
@@ -445,7 +436,6 @@ const styles = StyleSheet.create({
   containerPicker: {
     width: "100%",
     paddingVertical: 10,
-    gap: 10,
   },
   selectLabel: {
     fontSize: 16,

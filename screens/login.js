@@ -17,8 +17,8 @@ import * as SecureStore from "expo-secure-store";
 import { EXPO_DEFAULT_BASE_URL } from "@env";
 
 export default function Login() {
-  const [email, setEmail] = useState("attzazg@gmail.com");
-  const [pass, setPass] = useState("aBC@1234567");
+  const [email, setEmail] = useState("attzaz@yopmail.com");
+  const [pass, setPass] = useState("aBC@123456");
   const [isSnackBarVisible, setIsSnackBarVisible] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState(
     "Unable to connect to server. Please try again"

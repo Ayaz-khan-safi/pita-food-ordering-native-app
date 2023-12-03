@@ -17,7 +17,19 @@ export const ordersAPI = baseAPI.injectEndpoints({
       }),
       providesTags: [ORDERS],
     }),
+    orderUpdate: builder.mutation({
+      query: ({id, updateOrder}) => ({
+        url: `/orders/update/${id}`,
+        method: "PATCH",
+        body: JSON.stringify(updateOrder),
+      }),
+      invalidatesTags: [ORDERS],
+    }),
   }),
 });
 
-export const { useAllOrdersQuery, useFindOneOrderQuery } = ordersAPI;
+export const {
+  useAllOrdersQuery,
+  useFindOneOrderQuery,
+  useOrderUpdateMutation,
+} = ordersAPI;
