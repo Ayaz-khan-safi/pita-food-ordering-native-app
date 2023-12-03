@@ -9,6 +9,7 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import Modal from "react-native-modal";
 import { Table, Row } from "react-native-table-component";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
@@ -26,6 +27,8 @@ const windowHeight = Dimensions.get("window").height;
 export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
   const [deliveryTime, setDeliveryTime] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const route = useRoute();
 
   const dynamicID = route.params?.id;
@@ -44,14 +47,14 @@ export default function OrderDetailsScreen() {
 
   const userRider = riders?.data?.result;
 
-  const handleAssignRider = async ()  => {
+  const handleAssignRider = async () => {
     console.log("Rider assigned!", deliveryTime, rider);
-    const  data = await {
+    const data = await {
       ...singleData?.data,
       riderId: rider,
       timing: deliveryTime,
     };
-    console.log(data);
+    console.log(singleData?.data?._id, data);
     updateOrder(data)
       .unwrap()
       .then((response) => {
@@ -64,12 +67,17 @@ export default function OrderDetailsScreen() {
       .catch((error) =>
         console.log("There is a problem connecting to API.", error)
       );
+      setModalVisible(!isModalVisible);
   };
   console.log("Single Data = ", singleData?.data);
 
   // console.log(EXPO_DEFAULT_BASE_URL);
 
   // console.log(userriRider);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -307,6 +315,9 @@ export default function OrderDetailsScreen() {
             </TouchableOpacity>
           </View>
         </View>
+        <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
+          <Text style={styles.selectLabel}>Hello modal</Text>
+        </Modal>
       </View>
     </ImageBackground>
   );
