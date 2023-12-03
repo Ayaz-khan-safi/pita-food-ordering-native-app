@@ -12,13 +12,13 @@ import {
 import { Table, Row } from "react-native-table-component";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
-import { useFindOneOrderQuery } from "../services/ordersApi";
 import { Ionicons } from "@expo/vector-icons";
 import { EXPO_DEFAULT_BASE_URL } from "@env";
+import { useFindOneOrderQuery } from "../services/ordersApi";
+import { useUsersListQuery } from "../services/usersApi";
 
 const tableHeadData = ["Item", "Price", "SubTotal", "Total"];
-const windowHeight = Dimensions.get('window').height;
-
+const windowHeight = Dimensions.get("window").height;
 
 export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
@@ -30,7 +30,15 @@ export default function OrderDetailsScreen() {
   const { data: singleData } = useFindOneOrderQuery({
     id: dynamicID,
   });
+
+  const { data: riders } = useUsersListQuery({
+    limit: 100,
+    page: 1,
+    role: "RIDER",
+  });
+
   const singleOrderData = singleData?.data?.orderDetails;
+  const userRider = riders?.data?.result;
 
   const handleAssignRider = () => {
     console.log("Rider assigned!", deliveryTime);
@@ -40,6 +48,7 @@ export default function OrderDetailsScreen() {
   console.log("Single Order Item = " + singleOrderData);
 
   console.log(EXPO_DEFAULT_BASE_URL);
+  console.log(userRider);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -59,145 +68,154 @@ export default function OrderDetailsScreen() {
           <View style={styles.orderInfoContainer}>
             <Text style={styles.selectLabel}>Order Details</Text>
             <ScrollView style={styles.ScrollViewContainer}>
-            {singleData?.data?.orderDetails.map((item, idx) => (
-              <View style={{ backgroundColor: "#F2D401", borderBottomWidth:1, borderBottomColor: "#938100" }}>
+              {singleData?.data?.orderDetails.map((item, idx) => (
                 <View
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    paddingHorizontal: 15,
-                    paddingVertical: 10,
+                    backgroundColor: "#F2D401",
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#938100",
+                    paddingVertical: 5,
                   }}
                 >
-                  <Text
+                  <View
                     style={{
-                      color: "#000",
-                      fontSize: 16,
-                      fontWeight: 800,
-                      flex: 0,
-                      width: "35%",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      paddingHorizontal: 15,
+                      paddingVertical: 5,
                     }}
                   >
-                    {item.productName}
-                  </Text>
-                  <View style={{ flex: 0, width: "20%", textAlign: "left" }}>
-                    <Image
-                      source={require("../assets/OrderCardImage/pizzaImage.png")}
+                    <Text
                       style={{
-                        width: 50,
-                        height: 30,
+                        color: "#000",
+                        fontSize: 16,
+                        fontWeight: 800,
                         flex: 0,
+                        width: "35%",
                       }}
-                    ></Image>
-                  </View>
-                  <Text
-                    style={{
-                      color: "#000",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      flex: 0,
-                      width: "15%",
-                      textAlign: "center",
-                    }}
-                  >
-                    {item.productQuantity}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#000",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      flex: 0,
-                      width: "15%",
-                      textAlign: "center",
-                    }}
-                  >
-                    ${item.productPrice}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#000",
-                      fontSize: 14,
-                      fontWeight: 700,
-                      flex: 0,
-                      width: "15%",
-                      textAlign: "right",
-                    }}
-                  >
-                    ${item.productSubTotal}
-                  </Text>
-                </View>
-                {item.addons &&
-                  item.addons.map((addon, idx) => (
-                    <View style={{ paddingHorizontal: 15, paddingVertical: 5 }}>
-                      <View
+                    >
+                      {item.productName}
+                    </Text>
+                    <View style={{ flex: 0, width: "20%", textAlign: "left" }}>
+                      <Image
+                        source={require("../assets/OrderCardImage/pizzaImage.png")}
                         style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginVertical: 5,
-                          borderRadius: 5,
-                          backgroundColor:"#FFDF00",
-                          padding: 5,
+                          width: 50,
+                          height: 30,
+                          flex: 0,
                         }}
-                      >
-                        <Text
-                          style={{
-                            color: "#000",
-                            fontSize: 16,
-                            fontWeight: 700,
-                            flex: 0,
-                            width: "35%",
-                            textAlign: "left",
-                          }}
-                        >
-                          {addon.addonName}
-                        </Text>
-                        <View
-                          style={{ flex: 0, width: "20%", textAlign: "left" }}
-                        >
-                          <Image
-                            source={require("../assets/OrderCardImage/pizzaImage.png")}
-                            style={{ width: 50, height: 30 }}
-                          ></Image>
-                        </View>
-                        <Text
-                          style={{
-                            color: "#000",
-                            flex: 0,
-                            width: "15%",
-                            textAlign: "center",
-                          }}
-                        >
-                          {addon.addonQuantity}
-                        </Text>
-                        <Text
-                          style={{
-                            color: "#000",
-                            flex: 0,
-                            width: "15%",
-                            textAlign: "center",
-                          }}
-                        >
-                          ${addon.addonPrice}
-                        </Text>
-                        <Text
-                          style={{
-                            color: "#000",
-                            flex: 0,
-                            width: "15%",
-                            textAlign: "right",
-                          }}
-                        >
-                          ${addon.addonSubTotal}
-                        </Text>
-                      </View>
+                      ></Image>
                     </View>
-                  ))}
-              </View>
-            ))}
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 14,
+                        fontWeight: 600,
+                        flex: 0,
+                        width: "15%",
+                        textAlign: "center",
+                      }}
+                    >
+                      {item.productQuantity}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 14,
+                        fontWeight: 600,
+                        flex: 0,
+                        width: "15%",
+                        textAlign: "center",
+                      }}
+                    >
+                      ${item.productPrice}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 14,
+                        fontWeight: 700,
+                        flex: 0,
+                        width: "15%",
+                        textAlign: "right",
+                      }}
+                    >
+                      ${item.productSubTotal}
+                    </Text>
+                  </View>
+                  {item.addons &&
+                    item.addons.map((addon, idx) => (
+                      <View
+                        style={{ paddingHorizontal: 15, paddingVertical: 5 }}
+                      >
+                        <View
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginVertical: 5,
+                            borderRadius: 5,
+                            backgroundColor: "#FFDF00",
+                            padding: 5,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: "#000",
+                              fontSize: 16,
+                              fontWeight: 700,
+                              flex: 0,
+                              width: "35%",
+                              textAlign: "left",
+                            }}
+                          >
+                            {addon.addonName}
+                          </Text>
+                          <View
+                            style={{ flex: 0, width: "20%", textAlign: "left" }}
+                          >
+                            <Image
+                              source={require("../assets/OrderCardImage/pizzaImage.png")}
+                              style={{ width: 50, height: 30 }}
+                            ></Image>
+                          </View>
+                          <Text
+                            style={{
+                              color: "#000",
+                              flex: 0,
+                              width: "15%",
+                              textAlign: "center",
+                            }}
+                          >
+                            {addon.addonQuantity}
+                          </Text>
+                          <Text
+                            style={{
+                              color: "#000",
+                              flex: 0,
+                              width: "15%",
+                              textAlign: "center",
+                            }}
+                          >
+                            ${addon.addonPrice}
+                          </Text>
+                          <Text
+                            style={{
+                              color: "#000",
+                              flex: 0,
+                              width: "15%",
+                              textAlign: "right",
+                            }}
+                          >
+                            ${addon.addonSubTotal}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                </View>
+              ))}
             </ScrollView>
           </View>
           <View style={styles.customerInfoContainer}>
@@ -279,9 +297,9 @@ export default function OrderDetailsScreen() {
                 onValueChange={(itemValue, itemIndex) => setRider(itemValue)}
                 style={styles.picker}
               >
-                <Picker.Item label="Peter Hudson" value="Peter Hudson" />
-                <Picker.Item label="David Screw" value="David Screw" />
-                <Picker.Item label="Andre Pen" value="Andre Pen" />
+                {userRider.map((rider, idx) => (
+                  <Picker.Item label={rider.name} value={rider.name} />
+                ))}
               </Picker>
             </View>
           </View>
@@ -453,7 +471,7 @@ const styles = StyleSheet.create({
   ScrollViewContainer: {
     height: windowHeight * 0.3,
     borderRadius: 5,
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: "#FFDF00",
   },
 });
