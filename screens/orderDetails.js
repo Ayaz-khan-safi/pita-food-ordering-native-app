@@ -2,20 +2,23 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  FlatList,
+  Image,
+  ScrollView,
+  Dimensions,
 } from "react-native";
 import { Table, Row } from "react-native-table-component";
-import dummyData from "../data/dummy";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { useFindOneOrderQuery } from "../services/ordersApi";
 import { Ionicons } from "@expo/vector-icons";
+import { EXPO_DEFAULT_BASE_URL } from "@env";
 
 const tableHeadData = ["Item", "Price", "SubTotal", "Total"];
+const windowHeight = Dimensions.get('window').height;
+
 
 export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
@@ -24,45 +27,22 @@ export default function OrderDetailsScreen() {
 
   const dynamicID = route.params?.id;
 
-  const { data: singleData, isSuccess } = useFindOneOrderQuery({
+  const { data: singleData } = useFindOneOrderQuery({
     id: dynamicID,
   });
+  const singleOrderData = singleData?.data?.orderDetails;
 
   const handleAssignRider = () => {
     console.log("Rider assigned!", deliveryTime);
   };
+  console.log("Single Data = ", singleData?.data?.orderDetails);
 
-  // const tableDataMap = singleData?.data?.orderDetails?.map((item, idx) => [
-  //   item.productName,
-  //   item.productPrice,
-  //   item.productSubTotal,
-  //   item.productTotal,
-  // ]);
+  console.log("Single Order Item = " + singleOrderData);
 
-  const tableDataMap =
-    isSuccess &&
-    singleData?.data?.orderDetails?.map((item, idx) => [
-      item.productName,
-      item.productPrice,
-      item.productSubTotal,
-      item.productTotal,
-    ]);
-
-  console.log(singleData?.data?.orderDetails);
-
-  console.log("tablemapped " + tableDataMap);
-
-  const tableData = [
-    ["Item 1", "$10", "$20", "$30"],
-    ["Item 2", "$15", "$25", "$40"],
-    ["Item 1", "$10", "$20", "$30"],
-    ["Item 2", "$15", "$25", "$40"],
-  ];
-
+  console.log(EXPO_DEFAULT_BASE_URL);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
-      c
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
@@ -78,45 +58,147 @@ export default function OrderDetailsScreen() {
 
           <View style={styles.orderInfoContainer}>
             <Text style={styles.selectLabel}>Order Details</Text>
-            {isSuccess && (
-              <Table>
-                <Row data={tableHeadData} style={styles.tableHead} />
-                {tableDataMap.map((rowData, index) => (
-                  <Row
-                    key={index}
-                    data={rowData}
-                    style={[
-                      styles.tableRow,
-                      index % 2 && { backgroundColor: "#F7F6E7" },
-                    ]}
-                  />
-                ))}
-              </Table>
-            )}
-            {/* <FlatList
-              data={singleData?.data?.orderDetails}
-              keyExtractor={(item, idx) => idx}
-              renderItem={({ item }) => (
-                <>
-                  <View style={styles.orderDetails}>
-                    <Text style={styles.orderItemText}>
-                      {item?.productName}
-                    </Text>
-                    <Text style={styles.orderItemText}>
-                      {item?.productPrice}
-                    </Text>
+            <ScrollView style={styles.ScrollViewContainer}>
+            {singleData?.data?.orderDetails.map((item, idx) => (
+              <View style={{ backgroundColor: "#F2D401", borderBottomWidth:1, borderBottomColor: "#938100" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingHorizontal: 15,
+                    paddingVertical: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#000",
+                      fontSize: 16,
+                      fontWeight: 800,
+                      flex: 0,
+                      width: "35%",
+                    }}
+                  >
+                    {item.productName}
+                  </Text>
+                  <View style={{ flex: 0, width: "20%", textAlign: "left" }}>
+                    <Image
+                      source={require("../assets/OrderCardImage/pizzaImage.png")}
+                      style={{
+                        width: 50,
+                        height: 30,
+                        flex: 0,
+                      }}
+                    ></Image>
                   </View>
-                  <View style={styles.addonsList}>
-                    <Text style={styles.addonsText}>ADDONS: </Text>
-                    {item?.addons?.map((item, idx) => (
-                      <Text key={idx} style={styles.addonsText}>
-                        {item?.addonName},{" "}
-                      </Text>
-                    ))}
-                  </View>
-                </>
-              )}
-            /> */}
+                  <Text
+                    style={{
+                      color: "#000",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      flex: 0,
+                      width: "15%",
+                      textAlign: "center",
+                    }}
+                  >
+                    {item.productQuantity}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "#000",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      flex: 0,
+                      width: "15%",
+                      textAlign: "center",
+                    }}
+                  >
+                    ${item.productPrice}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "#000",
+                      fontSize: 14,
+                      fontWeight: 700,
+                      flex: 0,
+                      width: "15%",
+                      textAlign: "right",
+                    }}
+                  >
+                    ${item.productSubTotal}
+                  </Text>
+                </View>
+                {item.addons &&
+                  item.addons.map((addon, idx) => (
+                    <View style={{ paddingHorizontal: 15, paddingVertical: 5 }}>
+                      <View
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginVertical: 5,
+                          borderRadius: 5,
+                          backgroundColor:"#FFDF00",
+                          padding: 5,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "#000",
+                            fontSize: 16,
+                            fontWeight: 700,
+                            flex: 0,
+                            width: "35%",
+                            textAlign: "left",
+                          }}
+                        >
+                          {addon.addonName}
+                        </Text>
+                        <View
+                          style={{ flex: 0, width: "20%", textAlign: "left" }}
+                        >
+                          <Image
+                            source={require("../assets/OrderCardImage/pizzaImage.png")}
+                            style={{ width: 50, height: 30 }}
+                          ></Image>
+                        </View>
+                        <Text
+                          style={{
+                            color: "#000",
+                            flex: 0,
+                            width: "15%",
+                            textAlign: "center",
+                          }}
+                        >
+                          {addon.addonQuantity}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "#000",
+                            flex: 0,
+                            width: "15%",
+                            textAlign: "center",
+                          }}
+                        >
+                          ${addon.addonPrice}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "#000",
+                            flex: 0,
+                            width: "15%",
+                            textAlign: "right",
+                          }}
+                        >
+                          ${addon.addonSubTotal}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+              </View>
+            ))}
+            </ScrollView>
           </View>
           <View style={styles.customerInfoContainer}>
             <Text style={styles.custInfoText}>
@@ -367,5 +449,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#FFF1C1",
     padding: 8,
+  },
+  ScrollViewContainer: {
+    height: windowHeight * 0.3,
+    borderRadius: 5,
+    overflow: 'hidden',
+    backgroundColor: "#FFDF00",
   },
 });

@@ -10,6 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useAllOrdersQuery } from "../services/ordersApi";
 import OrderCard from "../components/orderCard";
+import { EXPO_DEFAULT_BASE_URL } from "@env";
 
 export default function Dashboard() {
   const navigation = useNavigation();
@@ -54,6 +55,8 @@ export default function Dashboard() {
       </TouchableOpacity>
     );
   };
+
+  console.log(EXPO_DEFAULT_BASE_URL);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}

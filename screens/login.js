@@ -14,10 +14,11 @@ import { Snackbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useUserLoginMutation } from "../services/loginApi";
 import * as SecureStore from "expo-secure-store";
+import { EXPO_DEFAULT_BASE_URL } from "@env";
 
 export default function Login() {
-  const [email, setEmail] = useState("attzaz@yopmail.com");
-  const [pass, setPass] = useState("aBC@123456");
+  const [email, setEmail] = useState("attzazg@gmail.com");
+  const [pass, setPass] = useState("aBC@1234567");
   const [isSnackBarVisible, setIsSnackBarVisible] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState(
     "Unable to connect to server. Please try again"
@@ -49,7 +50,7 @@ export default function Login() {
         setSnackBarMessage(error.data.message);
       });
   };
-
+  console.log(EXPO_DEFAULT_BASE_URL);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
