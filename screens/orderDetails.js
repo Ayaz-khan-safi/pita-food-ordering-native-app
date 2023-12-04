@@ -67,17 +67,13 @@ export default function OrderDetailsScreen() {
       .catch((error) =>
         console.log("There is a problem connecting to API.", error)
       );
-      setIsModalVisible(!isModalVisible);
+    setIsModalVisible(!isModalVisible);
   };
-  console.log("Single Data = ", singleData?.data);
-
-  // console.log(EXPO_DEFAULT_BASE_URL);
-
-  // console.log(userriRider);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}

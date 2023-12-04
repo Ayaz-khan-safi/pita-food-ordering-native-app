@@ -64,7 +64,14 @@ export default function Login() {
         <View style={styles.overlay}>
           <View style={styles.formContainer}>
             <View style={styles.headingContainer}>
-              <Text style={styles.headingText}>Pita Burger Master</Text>
+              {/* <Text style={styles.headingText}>Pita Burger Master</Text> */}
+              <Image
+                source={require("../assets/favicon.png")}
+                style={{
+                  width: "60%",
+                  height: 250,
+                }}
+              ></Image>
             </View>
             <View style={styles.container}>
               <TextInput
@@ -135,7 +142,10 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 18,
   },
-  headingContainer: {},
+  headingContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
   headingText: {
     color: "#fff",
     fontSize: 34,
