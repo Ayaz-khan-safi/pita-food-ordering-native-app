@@ -19,23 +19,17 @@ export default function OrderCard({ item }) {
       setTimeAgo(`${daysAgo}d ago`);
     }
   }, []);
+
+  console.log(item)
   return (
     <View style={styles.container}>
       <View
-        style={
-          item.orderStatus === "PENDING"
-            ? styles.statusContainerPending
-            : styles.statusContainerDelivered
-        }
+        style={{...styles.statusContainer, backgroundColor: item.orderDeliverType === "DELIVERY" ? "green" : "#fff"}}
       >
         <Text
-          style={
-            item.orderStatus === "PENDING"
-              ? styles.statusTextPending
-              : styles.statusTextDelireved
-          }
+          style={{...styles.statusText, color: item.orderDeliverType === "DELIVERY" ? "#fff" : "green"}}
         >
-          {item.orderStatus}
+          {item.orderDeliverType}
         </Text>
       </View>
       <View style={styles.totalContainer}>
@@ -72,8 +66,9 @@ export default function OrderCard({ item }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
-    padding: 10,
+    marginVertical:10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     backgroundColor: "#FFDF00",
     borderRadius: 12,
     flexDirection: "row",
@@ -88,35 +83,19 @@ const styles = StyleSheet.create({
     elevation: 5,
     position: "relative",
   },
-  statusContainerDelivered: {
+  statusContainer: {
     position: "absolute",
-    top: 10,
+    top: 12,
     left: 10,
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "green",
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-    borderRadius: 8,
-  },
-  statusTextDelireved: {
-    color: "green",
-    fontSize: 14,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-  },
-  statusContainerPending: {
-    position: "absolute",
-    top: 15,
-    left: 15,
-    backgroundColor: "red",
     paddingHorizontal: 5,
-    paddingVertical: 3,
     borderRadius: 8,
   },
-  statusTextPending: {
-    color: "white",
-    fontSize: 14,
+  statusText: {
+    color: "green",
+    fontSize: 12,
     fontWeight: "bold",
     textTransform: "uppercase",
   },
@@ -173,10 +152,11 @@ const styles = StyleSheet.create({
   custName: {
     fontSize: 16,
     fontWeight: "bold",
+    textTransform: "capitalize",
     color: "green",
     textShadowColor: "#e2e2e2",
     textShadowRadius: 5,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   paymentMode: {
     fontSize: 10,
