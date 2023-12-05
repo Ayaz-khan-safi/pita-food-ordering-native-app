@@ -14,7 +14,6 @@ import { Table, Row } from "react-native-table-component";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
-import { EXPO_DEFAULT_BASE_URL } from "@env";
 import {
   useFindOneOrderQuery,
   useOrderUpdateMutation,
@@ -33,15 +32,21 @@ export default function OrderDetailsScreen() {
 
   const dynamicID = route.params?.id;
 
-  const { data: singleData } = useFindOneOrderQuery({
-    id: dynamicID,
-  });
+  const { data: singleData } = useFindOneOrderQuery(
+    {
+      id: dynamicID,
+    },
+    { refetchOnMountOrArgChange: true }
+  );
 
-  const { data: riders } = useUsersListQuery({
-    limit: 100,
-    page: 1,
-    role: "RIDER",
-  });
+  const { data: riders } = useUsersListQuery(
+    {
+      limit: 100,
+      page: 1,
+      role: "RIDER",
+    },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const [updateOrder] = useOrderUpdateMutation();
 
@@ -67,17 +72,13 @@ export default function OrderDetailsScreen() {
       .catch((error) =>
         console.log("There is a problem connecting to API.", error)
       );
-      setIsModalVisible(!isModalVisible);
+    setIsModalVisible(!isModalVisible);
   };
-  console.log("Single Data = ", singleData?.data);
-
-  // console.log(EXPO_DEFAULT_BASE_URL);
-
-  // console.log(userriRider);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -119,7 +120,7 @@ export default function OrderDetailsScreen() {
                       style={{
                         color: "#000",
                         fontSize: 16,
-                        fontWeight: 800,
+                        fontWeight: "bold",
                         flex: 0,
                         width: "35%",
                       }}
@@ -140,7 +141,7 @@ export default function OrderDetailsScreen() {
                       style={{
                         color: "#000",
                         fontSize: 14,
-                        fontWeight: 600,
+                        fontWeight: "bold",
                         flex: 0,
                         width: "15%",
                         textAlign: "center",
@@ -152,7 +153,7 @@ export default function OrderDetailsScreen() {
                       style={{
                         color: "#000",
                         fontSize: 14,
-                        fontWeight: 600,
+                        fontWeight: "bold",
                         flex: 0,
                         width: "15%",
                         textAlign: "center",
@@ -164,7 +165,7 @@ export default function OrderDetailsScreen() {
                       style={{
                         color: "#000",
                         fontSize: 14,
-                        fontWeight: 700,
+                        fontWeight: "bold",
                         flex: 0,
                         width: "15%",
                         textAlign: "right",
@@ -194,7 +195,7 @@ export default function OrderDetailsScreen() {
                             style={{
                               color: "#000",
                               fontSize: 16,
-                              fontWeight: 700,
+                              fontWeight: "bold",
                               flex: 0,
                               width: "35%",
                               textAlign: "left",

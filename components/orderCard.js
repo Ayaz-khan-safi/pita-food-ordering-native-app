@@ -1,7 +1,24 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import moment from 'moment';
 
 export default function OrderCard({ item }) {
+  const [timeAgo, setTimeAgo] = useState(null);
+  const createdAtString = "2023-11-07T16:05:34.076Z";
+
+  useEffect(() => {
+    const createdAt = moment(createdAtString);
+    const now = moment();
+
+    const hoursAgo = now.diff(createdAt, 'hours');
+    const daysAgo = now.diff(createdAt, 'days');
+
+    if (hoursAgo < 24) {
+      setTimeAgo(`${hoursAgo}h ago`);
+    } else {
+      setTimeAgo(`${daysAgo}d ago`);
+    }
+  }, []);
   return (
     <View style={styles.container}>
       <View
@@ -22,26 +39,30 @@ export default function OrderCard({ item }) {
         </Text>
       </View>
       <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Total: {item?.totalAmount}</Text>
+        <Text style={styles.totalText}>${item?.totalAmount}</Text>
       </View>
 
-      <Image style={styles.image} source={item?.image} />
+      <Image
+        style={styles.image}
+        source={require("../assets/OrderCardImage/pizzaImage.png")}
+      />
       <View style={styles.detailsContainer}>
         <View style={styles.topDetails}>
           <View>
-            <Text style={styles.custName}>{item?.customers?.name}</Text>
+            <Text style={styles.custName}>{item?.customerData?.name}</Text>
 
             <Text style={styles.orderObj}>Burger | Coke | Family Deal</Text>
           </View>
           <View>
-            <Text style={styles.paymentMode}>
-              Payment Mode: {item?.paymentDetails?.paymentType}
-            </Text>
+            <Text style={styles.paymentMode}>Payment: {item?.paymentType}</Text>
           </View>
         </View>
-        <View>
+        <View style={styles.timeAddress}>
           <Text style={styles.address}>
-            {item?.customers?.street}, {item?.customers?.address}
+            {item?.address}, {item?.street}
+          </Text>
+          <Text style={styles.timeAgo}>
+            {timeAgo}
           </Text>
         </View>
       </View>
@@ -51,9 +72,8 @@ export default function OrderCard({ item }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 15,
     marginVertical: 10,
-    padding: 20,
+    padding: 10,
     backgroundColor: "#FFDF00",
     borderRadius: 12,
     flexDirection: "row",
@@ -90,8 +110,8 @@ const styles = StyleSheet.create({
     top: 15,
     left: 15,
     backgroundColor: "red",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
     borderRadius: 8,
   },
   statusTextPending: {
@@ -105,8 +125,8 @@ const styles = StyleSheet.create({
     top: 15,
     left: 15,
     backgroundColor: "green",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
     borderRadius: 8,
   },
   statusTextAccepted: {
@@ -118,7 +138,7 @@ const styles = StyleSheet.create({
   totalContainer: {
     position: "absolute",
     top: 2,
-    right: 2,
+    right: 3,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
@@ -127,16 +147,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 14,
     fontWeight: "bold",
-    textTransform: "uppercase",
     textShadowColor: "green",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
+    textShadowRadius: 4
   },
   image: {
-    width: 100,
-    height: 90,
+    width: 70,
+    height: 60,
     borderRadius: 0,
-    marginRight: 30,
+    marginRight: 25,
     marginTop: 30,
   },
   detailsContainer: {
@@ -148,26 +166,25 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   address: {
-    fontSize: 14,
+    fontSize: 10,
     color: "green",
     marginBottom: 2,
   },
   custName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "green",
-    textTransform: "capitalize",
-    textShadowColor: "white",
-    textShadowOffset: { width: 1, height: 1 },
+    textShadowColor: "#e2e2e2",
     textShadowRadius: 5,
+    marginBottom: 20,
   },
   paymentMode: {
-    fontSize: 14,
+    fontSize: 10,
     color: "green",
     marginBottom: 2,
   },
   orderObj: {
-    fontSize: 12,
+    fontSize: 10,
     color: "green",
     marginBottom: 5,
   },
@@ -181,4 +198,13 @@ const styles = StyleSheet.create({
     borderBottomColor: "white",
     marginBottom: 5,
   },
+  timeAddress: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  timeAgo: {
+    color: "#757272",
+    fontSize: 10,
+    marginBottom: 2,
+  }
 });

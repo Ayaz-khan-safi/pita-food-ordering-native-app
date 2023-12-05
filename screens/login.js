@@ -14,7 +14,6 @@ import { Snackbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useUserLoginMutation } from "../services/loginApi";
 import * as SecureStore from "expo-secure-store";
-import { EXPO_DEFAULT_BASE_URL } from "@env";
 
 export default function Login() {
   const [email, setEmail] = useState("attzaz@yopmail.com");
@@ -40,7 +39,7 @@ export default function Login() {
           if (response.data.user.role === "OWNER") {
             console.log(response.data.AccessToken);
             await SecureStore.setItemAsync("token", response.data.AccessToken);
-            navigation.navigate("dashboard");
+            navigation.navigate("dynamic");
           }
         }
       })
@@ -50,7 +49,6 @@ export default function Login() {
         setSnackBarMessage(error.data.message);
       });
   };
-  console.log(EXPO_DEFAULT_BASE_URL);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -64,7 +62,14 @@ export default function Login() {
         <View style={styles.overlay}>
           <View style={styles.formContainer}>
             <View style={styles.headingContainer}>
-              <Text style={styles.headingText}>Pita Burger Master</Text>
+              {/* <Text style={styles.headingText}>Pita Burger Master</Text> */}
+              <Image
+                source={require("../assets/favicon.png")}
+                style={{
+                  width: "60%",
+                  height: 250,
+                }}
+              ></Image>
             </View>
             <View style={styles.container}>
               <TextInput
@@ -135,7 +140,10 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 18,
   },
-  headingContainer: {},
+  headingContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
   headingText: {
     color: "#fff",
     fontSize: 34,
