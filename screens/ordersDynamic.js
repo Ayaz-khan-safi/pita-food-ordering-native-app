@@ -14,34 +14,49 @@ import { useNavigation } from "@react-navigation/native";
 import { useAllOrdersQuery } from "../services/ordersApi";
 import { useRoute } from "@react-navigation/native";
 import { ButtonGroup } from "react-native-elements";
+import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 
 const buttons = [
-  "CREATED",
-  "PENDING",
-  "ACCEPTED",
-  "CANCELED",
-  "READY",
-  "DELIVERED",
+  {
+    name: "Created",
+    icon: MaterialIcons,
+  },
+  {
+    name: "Accepted",
+    icon: AntDesign,
+  },
+  {
+    name: "Cancelled",
+    icon: MaterialIcons,
+  },
+  {
+    name: "Ready",
+    icon: MaterialIcons,
+  },
+  {
+    name: "Delivered",
+    icon: MaterialIcons,
+  },
 ];
 
 export default function DynamicOrders() {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [dynamicData, setdynamicData] = useState("DELIVERED");
+  const [dynamicData, setdynamicData] = useState("Created");
   const route = useRoute();
   // const dynamicData = route.params?.dynamicData;
   const navigation = useNavigation();
 
-  const updateIndex = (selectedIndex) => {
-    setSelectedIndex(selectedIndex);
-    console.log(selectedIndex);
+  const { data: orders } = useAllOrdersQuery();
+  const dynamicOrdersDisplay = orders?.data?.result
+    ? orders?.data?.result.filter(
+        (order) => order.orderStatus === dynamicData.toUpperCase()
+      )
+    : 0;
+
+  const updateIndex = (status) => {
+    console.log(status);
+    setdynamicData(status);
     // Add your logic based on the selected index
   };
-
-  const { data: orders } = useAllOrdersQuery();
-
-  const dynamicOrdersDisplay = orders?.data?.result
-    ? orders?.data?.result.filter((order) => order.orderStatus === dynamicData)
-    : 0;
 
   const handleCardClick = (item) => {
     navigation.navigate("orderDetails", { id: item._id });
@@ -64,33 +79,46 @@ export default function DynamicOrders() {
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-          <ScrollView
-            horizontal={true}
-            contentContainerStyle={styles.buttonContainerStyle}
-          >
-            {/* <ButtonGroup
+          <View>
+            <ScrollView
+              horizontal={true}
+              contentContainerStyle={styles.buttonContainerStyle}
+              showsHorizontalScrollIndicator={false}
+            >
+              {/* <ButtonGroup
               onPress={updateIndex}
               selectedIndex={selectedIndex}
               buttons={buttons}
               containerStyle={{ height: 40 }}
             /> */}
-            {buttons.map((buttonText, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.button}
-                onPress={() => {
-                  updateIndex(index);
-                }}
-              >
-                <Text style={{ color: "#000" }}>{buttonText}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <FlatList
-            data={dynamicOrdersDisplay}
-            renderItem={renderOrderCard}
-            keyExtractor={(item, idx) => idx}
-          />
+              {buttons.map((button, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.button}
+                  onPress={() => {
+                    updateIndex(button.name);
+                  }}
+                >
+                  <View style={styles.buttonBadge}>
+                    <Text style={{ color: "#000", fontSize: 12 }}>
+                      {dynamicOrdersDisplay.length}
+                    </Text>
+                  </View>
+                  <View style={styles.buttonInner}>
+                    <button.icon name="pending" size={24} color="black" />
+                    <Text style={{ color: "#000" }}>{button.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+          <View>
+            <FlatList
+              data={dynamicOrdersDisplay}
+              renderItem={renderOrderCard}
+              keyExtractor={(item, idx) => idx}
+            />
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -105,24 +133,42 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 2,
     backgroundColor: "rgba(0, 0, 0, 0.8)",
-    justifyContent: "center",
   },
   container: {
-    display: "flex",
     flexDirection: "column",
     gap: 20,
-    paddingHorizontal: 10,
-    paddingBottom: 50,
-    paddingTop: 100,
+    paddingHorizontal: 25,
+    padding: 50,
   },
   buttonContainerStyle: {
     flexDirection: "row",
+    paddingVertical: 25,
   },
   button: {
-    marginRight: 10,
+    marginRight: 20,
     backgroundColor: "#FFDF00",
-    borderRadius: 5,
+    borderRadius: 20,
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 8,
+  },
+  buttonInner: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+  },
+  buttonBadge: {
+    position: "absolute",
+    backgroundColor: "#fff",
+    textAlign: "center",
+    height: 25,
+    width: 25,
+    borderRadius: 25,
+    top: -7,
+    right: -10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

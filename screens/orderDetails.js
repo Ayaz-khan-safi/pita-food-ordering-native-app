@@ -14,7 +14,6 @@ import { Table, Row } from "react-native-table-component";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
-import { EXPO_DEFAULT_BASE_URL } from "@env";
 import {
   useFindOneOrderQuery,
   useOrderUpdateMutation,

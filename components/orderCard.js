@@ -51,7 +51,6 @@ export default function OrderCard({ item }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 15,
     marginVertical: 10,
     padding: 20,
     backgroundColor: "#FFDF00",

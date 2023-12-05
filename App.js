@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet, Text, View } from "react-native";
 import Login from "./screens/login";
-import Dashboard from "./screens/overAllDetails";
+// import Dashboard from "./screens/overAllDetails";
 import AppHeader from "./components/appHeader";
 import OrderDetailsScreen from "./screens/orderDetails";
 import DynamicOrders from "./screens/ordersDynamic";
@@ -16,7 +16,7 @@ function AppComponent() {
     <NavigationContainer>
       <StatusBar hidden />
       <Stack.Navigator
-        initialRouteName="login"
+        initialRouteName="dynamic"
         screenOptions={{
           header: (props) => <AppHeader {...props} />,
         }}
@@ -26,11 +26,11 @@ function AppComponent() {
           component={Login}
           options={{ title: "Login" }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="dashboard"
           component={Dashboard}
           options={{ title: "Dashboard" }}
-        />
+        /> */}
         <Stack.Screen
           name="orderDetails"
           component={OrderDetailsScreen}
