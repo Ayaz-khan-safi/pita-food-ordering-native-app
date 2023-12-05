@@ -153,13 +153,17 @@ export default function DynamicOrders() {
               Showing 10 out of 220
             </Text>
           </View>
-          <View>
+          <ScrollView
+              vertical={true}
+              contentContainerStyle={styles.cardsContainerStyle}
+              showsHorizontalScrollIndicator={true}
+            >
             <FlatList
               data={dynamicOrdersDisplay}
               renderItem={renderOrderCard}
               keyExtractor={(item, idx) => idx}
             />
-          </View>
+          </ScrollView>
         </View>
       </View>
     </ImageBackground>
@@ -184,6 +188,11 @@ const styles = StyleSheet.create({
   buttonContainerStyle: {
     flexDirection: "row",
     paddingVertical: 20,
+  },
+  cardsContainerStyle: {
+    flexDirection: "row",
+    paddingVertical: 5,
+    height:500,
   },
   button: {
     marginRight: 30,
