@@ -123,11 +123,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   totalText: {
-    color: "white",
+    color: "#757272",
     fontSize: 14,
     fontWeight: "bold",
-    textShadowColor: "green",
-    textShadowRadius: 4
   },
   image: {
     width: 70,
