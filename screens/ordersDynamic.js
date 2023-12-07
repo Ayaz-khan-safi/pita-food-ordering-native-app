@@ -11,7 +11,10 @@ import {
 import dummyData from "../data/dummy";
 import OrderCard from "../components/orderCard";
 import { useNavigation } from "@react-navigation/native";
-import { useAllOrdersQuery, useFindOneOrderQuery } from "../services/ordersApi";
+import {
+  useFindSpecificOrdersQuery,
+  useAllOrdersQuery,
+} from "../services/ordersApi";
 import { useRoute } from "@react-navigation/native";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -51,22 +54,29 @@ const buttons = [
 
 export default function DynamicOrders() {
   const [dynamicData, setdynamicData] = useState("Created");
+  const [limit, setLimit] = useState(10);
+  const [pageNumber, setPageNumber] = useState(1);
   const route = useRoute();
-  // const dynamicData = route.params?.dynamicData;
+
   const navigation = useNavigation();
+  const { data: allOrdersData } = useAllOrdersQuery();
 
-  const { data: orders } = useAllOrdersQuery({ refetchOnMountOrArgChange: true });
+  const allOrders = allOrdersData?.data?.result;
 
-  const dynamicOrdersDisplay = orders?.data?.result
-    ? orders?.data?.result.filter(
-        (order) => order.orderStatus === dynamicData.toUpperCase()
-      )
-    : 0;
+  const { data: statusBasedOrders } = useFindSpecificOrdersQuery(
+    {
+      page: pageNumber,
+      limit: limit,
+      statusOrder: dynamicData.toUpperCase(),
+    }
+    // { refetchOnMountOrArgChange: true }
+  );
+
+  const dynamicOrdersDisplay = statusBasedOrders?.data;
 
   const updateIndex = (status) => {
     console.log(status);
     setdynamicData(status);
-    // Add your logic based on the selected index
   };
 
   const handleCardClick = (item) => {
@@ -90,7 +100,7 @@ export default function DynamicOrders() {
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-        <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+          <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
             <Text style={{ color: "#fff", fontSize: 20, letterSpacing: 3 }}>
               {dynamicData}
             </Text>
@@ -127,12 +137,8 @@ export default function DynamicOrders() {
                         fontSize: 12,
                       }}
                     >
-                      {
-                        orders?.data?.result.filter(
-                          (order) =>
-                            order.orderStatus === button.name.toUpperCase()
-                        ).length
-                      }
+                      {dynamicData === button.name &&
+                        dynamicOrdersDisplay?.metadata?.total}
                     </Text>
                   </View>
                   <View style={styles.buttonInner}>
@@ -148,18 +154,25 @@ export default function DynamicOrders() {
               ))}
             </ScrollView>
           </View>
-          <View style={{ flexDirection: "row", justifyContent: "flex-end", paddingVertical:4 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              paddingVertical: 4,
+            }}
+          >
             <Text style={{ color: "#757272", fontSize: 12 }}>
-              Showing 10 out of 220
+              Showing {dynamicOrdersDisplay?.result?.length} out of{" "}
+              {dynamicOrdersDisplay?.metadata?.total}
             </Text>
           </View>
           <ScrollView
-              vertical={true}
-              contentContainerStyle={styles.cardsContainerStyle}
-              showsHorizontalScrollIndicator={true}
-            >
+            vertical={true}
+            contentContainerStyle={styles.cardsContainerStyle}
+            showsHorizontalScrollIndicator={true}
+          >
             <FlatList
-              data={dynamicOrdersDisplay}
+              data={dynamicOrdersDisplay?.result}
               renderItem={renderOrderCard}
               keyExtractor={(item, idx) => idx}
             />
@@ -192,7 +205,7 @@ const styles = StyleSheet.create({
   cardsContainerStyle: {
     flexDirection: "row",
     paddingVertical: 5,
-    height:500,
+    height: 500,
   },
   button: {
     marginRight: 30,

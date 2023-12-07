@@ -14,6 +14,7 @@ import { Table, Row } from "react-native-table-component";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 import {
   useFindOneOrderQuery,
   useOrderUpdateMutation,
@@ -88,15 +89,12 @@ export default function OrderDetailsScreen() {
         <View style={styles.container}>
           <View style={styles.statusContainer}>
             <Text style={styles.status}>{singleData?.data?.orderStatus}</Text>
-          </View>
-          <View style={styles.orderIdContainer}>
             <Text style={styles.orderId}>
-              Order Type: {singleData?.data?.orderDeliverType}
+              {singleData?.data?.orderDeliverType}
             </Text>
           </View>
-
           <View style={styles.orderInfoContainer}>
-            <Text style={styles.selectLabel}>Order Details</Text>
+            {/* <Text style={styles.selectLabel}>Details</Text> */}
             <ScrollView style={styles.ScrollViewContainer}>
               {singleData?.data?.orderDetails.map((item, idx) => (
                 <View
@@ -249,23 +247,18 @@ export default function OrderDetailsScreen() {
             </ScrollView>
           </View>
           <View style={styles.customerInfoContainer}>
-            <Text style={styles.custInfoText}>
-              Address:{" "}
-              {`${singleData?.data?.street} ${singleData?.data?.address}`}
-            </Text>
-            <Text style={styles.custInfoText}>
-              Tax: {singleData?.data?.taxAmount}
-            </Text>
             <Text style={styles.TotalPrice}>
-              Total: ${singleData?.data?.totalAmount}
+              ${singleData?.data?.totalAmount}
+            </Text>
+            <Text style={styles.custInfoText}>
+              <EvilIcons name="location" size={18} color="#fff" />{" "}
+              {`${singleData?.data?.street} ${singleData?.data?.address}`}
             </Text>
           </View>
           <View style={styles.containerPicker}>
-            <Text style={styles.selectLabel}>
-              Choose rider & delivery time:
-            </Text>
-            <View style={{ flexDirection: "column", gap: 15 }}>
+            <View style={{ flexDirection: "column", gap: 3 }}>
               <View>
+                <Text style={styles.selectLabel}>Choose Delivery Time</Text>
                 <ScrollView
                   horizontal={true}
                   contentContainerStyle={styles.timeCards}
@@ -293,15 +286,18 @@ export default function OrderDetailsScreen() {
                   ))}
                 </ScrollView>
               </View>
-              <Picker
-                selectedValue={rider}
-                onValueChange={(itemValue, itemIndex) => setRider(itemValue)}
-                style={styles.picker}
-              >
-                {userRider?.map((rider, idx) => (
-                  <Picker.Item label={rider.name} value={rider._id} />
-                ))}
-              </Picker>
+              <View>
+                <Text style={styles.selectLabel}>Choose Rider</Text>
+                <Picker
+                  selectedValue={rider}
+                  onValueChange={(itemValue, itemIndex) => setRider(itemValue)}
+                  style={styles.picker}
+                >
+                  {userRider?.map((rider, idx) => (
+                    <Picker.Item label={rider.name} value={rider._id} />
+                  ))}
+                </Picker>
+              </View>
             </View>
           </View>
           <View style={styles.buttonContainer}>
@@ -340,26 +336,31 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 20,
   },
-  orderIdContainer: {
-    position: "absolute",
-    top: 40,
-    left: 10,
-  },
   orderId: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "white",
+    color: "#000",
+    backgroundColor: "#e2e2e2",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 20,
   },
   statusContainer: {
-    position: "absolute",
-    top: 40,
-    right: 10,
+    height: "10%",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
   },
   status: {
     fontSize: 14,
     fontWeight: "bold",
     textTransform: "uppercase",
     color: "red",
+    backgroundColor: "#e2e2e2",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 20,
   },
   orderInfoContainer: {
     flexDirection: "column",
@@ -368,7 +369,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   customerInfoContainer: {
-    flexDirection: "column",
     gap: 5,
     borderBottomWidth: 1,
     borderBottomColor: "#e2e2e2",
@@ -400,8 +400,8 @@ const styles = StyleSheet.create({
   TotalPrice: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 5,
     color: "white",
+    textAlign: "right",
   },
   buttonContainer: {
     flexDirection: "row",
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 60,
-    width: 120,
+    width: 100,
     borderWidth: 0.5,
     backgroundColor: "#FFDF00",
     borderColor: "#FFDF00",
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
   selectLabel: {
     fontSize: 16,
     color: "#fff",
-    marginBottom: 10,
+    marginBottom: 5,
   },
   picker: {
     height: 40,

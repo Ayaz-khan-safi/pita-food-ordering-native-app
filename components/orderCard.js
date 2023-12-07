@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
-import moment from 'moment';
+import moment from "moment";
 
 export default function OrderCard({ item }) {
   const [timeAgo, setTimeAgo] = useState(null);
@@ -10,8 +10,8 @@ export default function OrderCard({ item }) {
     const createdAt = moment(createdAtString);
     const now = moment();
 
-    const hoursAgo = now.diff(createdAt, 'hours');
-    const daysAgo = now.diff(createdAt, 'days');
+    const hoursAgo = now.diff(createdAt, "hours");
+    const daysAgo = now.diff(createdAt, "days");
 
     if (hoursAgo < 24) {
       setTimeAgo(`${hoursAgo}h ago`);
@@ -19,15 +19,20 @@ export default function OrderCard({ item }) {
       setTimeAgo(`${daysAgo}d ago`);
     }
   }, []);
-
-  console.log(item)
   return (
     <View style={styles.container}>
       <View
-        style={{...styles.statusContainer, backgroundColor: item.orderDeliverType === "DELIVERY" ? "green" : "#fff"}}
+        style={{
+          ...styles.statusContainer,
+          backgroundColor:
+            item.orderDeliverType === "DELIVERY" ? "green" : "#fff",
+        }}
       >
         <Text
-          style={{...styles.statusText, color: item.orderDeliverType === "DELIVERY" ? "#fff" : "green"}}
+          style={{
+            ...styles.statusText,
+            color: item.orderDeliverType === "DELIVERY" ? "#fff" : "green",
+          }}
         >
           {item.orderDeliverType}
         </Text>
@@ -55,9 +60,7 @@ export default function OrderCard({ item }) {
           <Text style={styles.address}>
             {item?.address}, {item?.street}
           </Text>
-          <Text style={styles.timeAgo}>
-            {timeAgo}
-          </Text>
+          <Text style={styles.timeAgo}>{timeAgo}</Text>
         </View>
       </View>
     </View>
@@ -66,7 +69,7 @@ export default function OrderCard({ item }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical:10,
+    marginVertical: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
     backgroundColor: "#FFDF00",
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   totalText: {
-    color: "#757272",
+    color: "green",
     fontSize: 14,
     fontWeight: "bold",
   },
@@ -181,8 +184,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   timeAgo: {
-    color: "#757272",
+    color: "green",
     fontSize: 10,
     marginBottom: 2,
-  }
+  },
 });

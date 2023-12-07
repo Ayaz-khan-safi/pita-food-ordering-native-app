@@ -5,7 +5,7 @@ import { EXPO_DEFAULT_BASE_URL } from "@env";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: EXPO_DEFAULT_BASE_URL,
-  baseUrl: "https://a720-116-71-10-84.ngrok.io",
+  baseUrl: "https://16da-203-175-72-8.ngrok.io",
   prepareHeaders: async (headers) => {
     const token = await SecureStore.getItemAsync("token");
     if (token) {

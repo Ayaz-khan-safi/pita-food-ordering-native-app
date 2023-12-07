@@ -3,9 +3,19 @@ import { ORDERS } from "./tags";
 
 export const ordersAPI = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
+    findSpecificOrders: builder.query({
+      query: (params) => {
+        const { page, limit, statusOrder } = params;
+        return {
+          url: `/orders/findAll${`?page=${page}&limit=${limit}&orderStatus=${statusOrder}`} `,
+          method: "GET",
+        };
+      },
+      providesTags: [ORDERS],
+    }),
     allOrders: builder.query({
       query: () => ({
-        url: "/orders/findAll?page=1&limit=100",
+        url: `/orders/findAll`,
         method: "GET",
       }),
       providesTags: [ORDERS],
@@ -30,6 +40,7 @@ export const ordersAPI = baseAPI.injectEndpoints({
 
 export const {
   useAllOrdersQuery,
+  useFindSpecificOrdersQuery,
   useFindOneOrderQuery,
   useOrderUpdateMutation,
 } = ordersAPI;
