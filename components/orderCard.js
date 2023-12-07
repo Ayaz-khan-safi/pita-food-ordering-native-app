@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { EvilIcons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import moment from "moment";
 
 export default function OrderCard({ item }) {
@@ -53,14 +56,14 @@ export default function OrderCard({ item }) {
             <Text style={styles.orderObj}>Burger | Coke | Family Deal</Text>
           </View>
           <View>
-            <Text style={styles.paymentMode}>Payment: {item?.paymentType}</Text>
+            <Text style={styles.paymentMode}><EvilIcons name="credit-card" size={14} color="green" /> {item?.paymentType}</Text>
           </View>
         </View>
         <View style={styles.timeAddress}>
           <Text style={styles.address}>
-            {item?.address}, {item?.street}
+          <EvilIcons name="location" size={14} color="green" />{" "}{item?.address}, {item?.street}
           </Text>
-          <Text style={styles.timeAgo}>{timeAgo}</Text>
+          <Text style={styles.timeAgo}><Ionicons name="time-outline" size={13} color="green" />{" "}{timeAgo}</Text>
         </View>
       </View>
     </View>
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     position: "absolute",
-    top: 12,
+    top: 10,
     left: 10,
     backgroundColor: "white",
     borderWidth: 1,
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
   },
   topDetails: {
     borderBottomWidth: 0.5,
-    borderBottomColor: "white",
+    borderBottomColor: "#9DB20B",
     marginBottom: 5,
   },
   timeAddress: {
