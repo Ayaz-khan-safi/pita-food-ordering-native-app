@@ -106,7 +106,7 @@ export default function DynamicOrders() {
             </Text>
           </View>
           <View>
-            <ScrollView
+            {/* <ScrollView
               horizontal={true}
               contentContainerStyle={styles.buttonContainerStyle}
               showsHorizontalScrollIndicator={true}
@@ -152,7 +152,52 @@ export default function DynamicOrders() {
                   </View>
                 </TouchableOpacity>
               ))}
-            </ScrollView>
+            </ScrollView> */}
+            <FlatList
+              data={buttons}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  key={item.name}
+                  style={
+                    dynamicData === item.name
+                      ? styles.buttonClicked
+                      : styles.button
+                  }
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    updateIndex(item.name);
+                  }}
+                >
+                  <View
+                    style={{
+                      ...styles.buttonBadge,
+                      backgroundColor:
+                        dynamicData === item.name ? "#FFDF00" : "#757272",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: dynamicData === item.name ? "#000" : "#000",
+                        fontSize: 12,
+                      }}
+                    >
+                      {dynamicData === item.name &&
+                        dynamicOrdersDisplay?.metadata?.total}
+                    </Text>
+                  </View>
+                  <View style={styles.buttonInner}>
+                    <MaterialCommunityIcons
+                      name={item.icon}
+                      size={56}
+                      color={dynamicData === item.name ? "#FFDF00" : "#757272"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.name}
+              horizontal={true}
+              contentContainerStyle={styles.buttonContainerStyle}
+            />
           </View>
           <View
             style={{
@@ -166,7 +211,7 @@ export default function DynamicOrders() {
               {dynamicOrdersDisplay?.metadata?.total}
             </Text>
           </View>
-          <ScrollView
+          <View
             vertical={true}
             contentContainerStyle={styles.cardsContainerStyle}
             showsHorizontalScrollIndicator={true}
@@ -175,8 +220,9 @@ export default function DynamicOrders() {
               data={dynamicOrdersDisplay?.result}
               renderItem={renderOrderCard}
               keyExtractor={(item, idx) => idx}
+              horizontal={false}
             />
-          </ScrollView>
+          </View>
         </View>
       </View>
     </ImageBackground>
