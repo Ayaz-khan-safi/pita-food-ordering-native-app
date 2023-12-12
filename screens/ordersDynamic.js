@@ -31,11 +31,6 @@ const buttons = [
     color: "#2ecc71",
   },
   {
-    name: "Pending",
-    icon: "progress-clock",
-    color: "#f39c12 ",
-  },
-  {
     name: "Ready",
     icon: "progress-star",
     color: "#27ae60",
@@ -53,7 +48,7 @@ const buttons = [
 ];
 
 export default function DynamicOrders() {
-  const [dynamicData, setdynamicData] = useState("Created");
+  const [dynamicData, setdynamicData] = useState("Accepted");
   const [limit, setLimit] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
   const route = useRoute();

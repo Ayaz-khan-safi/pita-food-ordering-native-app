@@ -16,7 +16,7 @@ function AppComponent() {
     <NavigationContainer>
       <StatusBar hidden />
       <Stack.Navigator
-        initialRouteName="dynamic"
+        initialRouteName="login"
         screenOptions={{
           header: (props) => <AppHeader {...props} />,
         }}

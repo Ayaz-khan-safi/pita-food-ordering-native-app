@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import {
 import { useUsersListQuery } from "../services/usersApi";
 import Steps from "react-native-steps";
 
-const labels = ["Created", "Accepted", "Pending"];
+const labels = ["Created", "Accepted", "Ready", "Delivered"];
 const configs = {
   stepIndicatorSize: 24,
   currentStepIndicatorSize: 42,
@@ -30,9 +30,9 @@ const configs = {
   stepStrokeCurrentColor: "#FFDF00",
   stepStrokeWidth: 3,
   stepStrokeFinishedColor: "#FFDF00",
-  stepStrokeUnFinishedColor: "#aaa",
+  stepStrokeUnFinishedColor: "green",
   separatorFinishedColor: "#FFDF00",
-  separatorUnFinishedColor: "#aaa",
+  separatorUnFinishedColor: "green",
   stepIndicatorFinishedColor: "#FFDF00",
   stepIndicatorUnFinishedColor: "green",
   stepIndicatorCurrentColor: "#FFDF00",
@@ -46,7 +46,7 @@ const configs = {
   currentStepLabelColor: "#FFDF00",
 };
 
-const deliveryTimeArray = [15, 30, 45, 60, "Others"];
+const deliveryTimeArray = ["15 min", "30 min", "45 min", "60 min", "Others"];
 const windowHeight = Dimensions.get("window").height;
 
 export default function OrderDetailsScreen() {
@@ -111,26 +111,19 @@ export default function OrderDetailsScreen() {
       case "CREATED":
         return (
           <View style={styles.actionsContainer}>
-            <View style={styles.buttonContainer}>
+            <View style={styles.buttonContainerCreated}>
               <TouchableOpacity
-                style={{ ...styles.createdButton, backgroundColor: "#aaa" }}
-                onPress={() => console.log("Cancel button Clicked")}
+                style={[styles.buttonCreated, { backgroundColor: "#aaa" }]}
+                onPress={handleAssignRider}
               >
-                <Text style={styles.buttonText}>
-                  Cancel{" "}
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={14}
-                    color="white"
-                  />
-                </Text>
+                <Text style={styles.buttonText}>Cencel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{ ...styles.createdButton, backgroundColor: "green" }}
-                onPress={() => console.log("Accept button Clicked")}
+                style={[styles.buttonCreated, { backgroundColor: "green" }]}
+                onPress={handleAssignRider}
               >
                 <Text style={styles.buttonText}>
-                  Accept{" "}
+                  Accept the order{" "}
                   <Ionicons
                     name="arrow-forward-sharp"
                     size={14}
@@ -142,39 +135,6 @@ export default function OrderDetailsScreen() {
           </View>
         );
       case "ACCEPTED":
-        return (
-          <View style={styles.actionsContainer}>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={{ ...styles.createdButton, backgroundColor: "#aaa" }}
-                onPress={() => console.log("Cancel button Clicked")}
-              >
-                <Text style={styles.buttonText}>
-                  Cancel{" "}
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={14}
-                    color="white"
-                  />
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ ...styles.createdButton, backgroundColor: "green" }}
-                onPress={() => console.log("Accept button Clicked")}
-              >
-                <Text style={styles.buttonText}>
-                  Accept{" "}
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={14}
-                    color="white"
-                  />
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        );
-      case "PENDING":
         return (
           <View style={styles.actionsContainer}>
             <View style={styles.containerPicker}>
@@ -204,7 +164,7 @@ export default function OrderDetailsScreen() {
                         <Text style={styles.timeText}>{item}</Text>
                       </TouchableOpacity>
                     )}
-                    keyExtractor={(item) => item.key}
+                    keyExtractor={(item) => item}
                     horizontal={true}
                   />
                 </View>
@@ -245,12 +205,30 @@ export default function OrderDetailsScreen() {
             </View>
           </View>
         );
+      case "READY":
+        return <Text style={{ color: "#fff" }}>This is ready state</Text>;
       default:
         return (
           <Text style={styles.custInfoText}>Rendered for default case</Text>
         );
     }
   };
+
+  // const mapStatusToValue = (status) => {
+  //   switch (status) {
+  //     case "CREATED":
+  //       setCurrent(0);
+  //     case "ACCEPTED":
+  //       setCurrent(1);
+  //     case "READY":
+  //       setCurrent(2);
+  //     case "DELIVERED":
+  //       setCurrent(3);
+  //     default:
+  //       setCurrent(0);
+  //   }
+  // };
+  // mapStatusToValue(singleData?.data?.orderStatus);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -301,8 +279,18 @@ export default function OrderDetailsScreen() {
           <View style={styles.stepperContainer}>
             <Steps
               configs={configs}
-              count={3}
-              current={current}
+              count={4}
+              current={
+                singleData?.data?.orderStatus === "CREATED"
+                  ? 0
+                  : singleData?.data?.orderStatus === "ACCEPTED"
+                  ? 1
+                  : singleData?.data?.orderStatus === "READY"
+                  ? 2
+                  : singleData?.data?.orderStatus === "DELIVERED"
+                  ? 3
+                  : 0
+              }
               labels={labels}
               reversed={false}
             />
@@ -480,141 +468,6 @@ export default function OrderDetailsScreen() {
         <View>
           {renderContent((orderStatus = singleData?.data?.orderStatus))}
         </View>
-        {/* {singleData?.data?.orderStatus === "PENDING" && (
-          <View style={styles.actionsContainer}>
-            <View style={styles.containerPicker}>
-              <View style={{ flexDirection: "column", gap: 3 }}>
-                <View>
-                  <Text style={styles.selectLabel}>Choose Delivery Time</Text>
-                  <FlatList
-                    data={deliveryTimeArray}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity
-                        key={item}
-                        style={styles.timeSingleCard}
-                        activeOpacity={1}
-                        onPress={() => setDeliveryTime(item)}
-                      >
-                        {deliveryTime === item ? (
-                          <Ionicons
-                            name="checkmark-circle-sharp"
-                            size={30}
-                            color="green"
-                            style={styles.checkIcon}
-                          />
-                        ) : (
-                          ""
-                        )}
-
-                        <Text style={styles.timeText}>{item}</Text>
-                      </TouchableOpacity>
-                    )}
-                    keyExtractor={(item) => item.key}
-                    horizontal={true}
-                  />
-                </View>
-                <View>
-                  <Text style={styles.selectLabel}>Choose Rider</Text>
-                  <Picker
-                    selectedValue={rider}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setRider(itemValue)
-                    }
-                    style={styles.picker}
-                  >
-                    {userRider?.map((rider, idx) => (
-                      <Picker.Item
-                        key={rider.name}
-                        label={rider.name}
-                        value={rider._id}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-              </View>
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: "green" }]}
-                onPress={handleAssignRider}
-              >
-                <Text style={styles.buttonText}>
-                  Proceed to Print{" "}
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={14}
-                    color="white"
-                  />
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )} */}
-
-        {/* {singleData?.data?.orderStatus === "CREATED" && (
-          <View style={styles.actionsContainer}>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={{ ...styles.createdButton, backgroundColor: "#aaa" }}
-                onPress={() => console.log("Cancel button Clicked")}
-              >
-                <Text style={styles.buttonText}>
-                  Cancel{" "}
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={14}
-                    color="white"
-                  />
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ ...styles.createdButton, backgroundColor: "green" }}
-                onPress={() => console.log("Accept button Clicked")}
-              >
-                <Text style={styles.buttonText}>
-                  Accept{" "}
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={14}
-                    color="white"
-                  />
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-        {singleData?.data?.orderStatus === "CREATED" && (
-          <View style={styles.actionsContainer}>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={{ ...styles.createdButton, backgroundColor: "#aaa" }}
-                onPress={() => console.log("Cancel button Clicked")}
-              >
-                <Text style={styles.buttonText}>
-                  Cancel{" "}
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={14}
-                    color="white"
-                  />
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ ...styles.createdButton, backgroundColor: "green" }}
-                onPress={() => console.log("Accept button Clicked")}
-              >
-                <Text style={styles.buttonText}>
-                  Accept{" "}
-                  <Ionicons
-                    name="arrow-forward-sharp"
-                    size={14}
-                    color="white"
-                  />
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )} */}
       </View>
       <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
         <Text style={styles.selectLabel}>Hello modal</Text>
@@ -713,6 +566,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     width: "100%",
     marginVertical: 10,
+  },
+  buttonContainerCreated: {
+    flexDirection: "row",
+    gap: 10,
+    width: "100%",
+  },
+  buttonCreated: {
+    flex: 1,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
   },
   button: {
     width: "100%",
