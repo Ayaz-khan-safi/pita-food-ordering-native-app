@@ -206,12 +206,9 @@ export default function DynamicOrders() {
               {dynamicOrdersDisplay?.metadata?.total}
             </Text>
           </View>
-          <View
-            vertical={true}
-            contentContainerStyle={styles.cardsContainerStyle}
-            showsHorizontalScrollIndicator={true}
-          >
+          <View>
             <FlatList
+              style={styles.cardsContainerStyle}
               data={dynamicOrdersDisplay?.result}
               renderItem={renderOrderCard}
               keyExtractor={(item, idx) => idx}
@@ -244,7 +241,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   cardsContainerStyle: {
-    flexDirection: "row",
+    flexDirection: "column",
     paddingVertical: 5,
     height: 500,
   },

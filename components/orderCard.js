@@ -23,7 +23,7 @@ export default function OrderCard({ item }) {
     }
   }, []);
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, backgroundColor: item.orderStatus === "DELIVERED" ?  "#fff" :  "#FFDF00",}}>
       <View
         style={{
           ...styles.statusContainer,
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    backgroundColor: "#FFDF00",
     borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",

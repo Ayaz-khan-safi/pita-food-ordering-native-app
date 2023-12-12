@@ -13,13 +13,16 @@ import {
 import Modal from "react-native-modal";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
-import { Ionicons, EvilIcons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, EvilIcons, MaterialIcons, FontAwesome5 ,AntDesign  } from "@expo/vector-icons";
 import {
   useFindOneOrderQuery,
   useOrderUpdateMutation,
 } from "../services/ordersApi";
 import { useUsersListQuery } from "../services/usersApi";
 import Steps from "react-native-steps";
+import InvoiceScreen from "../components/invoice";
+import RNPrint from 'react-native-print';
+
 
 const labels = ["Created", "Accepted", "Ready", "Delivered"];
 const configs = {
@@ -206,7 +209,20 @@ export default function OrderDetailsScreen() {
           </View>
         );
       case "READY":
-        return <Text style={{ color: "#fff" }}>This is ready state</Text>;
+        return (
+          <View style={styles.buttonContainerReady}>
+            <Text style={styles.buttonText}>This order is ready to deliver!</Text>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "green" }]}
+              onPress={handleAssignRider}
+            >
+              <Text style={styles.buttonText}>
+                Remind the Rider{" "}
+                <EvilIcons name="bell" size={20} color="white" />
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
       default:
         return (
           <Text style={styles.custInfoText}>Rendered for default case</Text>
@@ -229,6 +245,15 @@ export default function OrderDetailsScreen() {
   //   }
   // };
   // mapStatusToValue(singleData?.data?.orderStatus);
+  const handlePrint = async () => {
+    const printContent = <Text>Here is the print content</Text>
+
+    await RNPrint.print({
+      printerURL: 'your-printer-url',
+      html: printContent,
+    });
+    console.log("Printing...")
+  };
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -470,7 +495,16 @@ export default function OrderDetailsScreen() {
         </View>
       </View>
       <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
-        <Text style={styles.selectLabel}>Hello modal</Text>
+        <InvoiceScreen/>
+        <TouchableOpacity
+                style={[styles.button, { backgroundColor: "green" }]}
+                onPress={handlePrint}
+              >
+                <Text style={styles.buttonText}>
+                  Print Invoice{" "}
+                  <AntDesign name="printer" size={16} color="white" />
+                </Text>
+              </TouchableOpacity>
       </Modal>
     </ImageBackground>
   );
@@ -480,13 +514,13 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
-    paddingTop: 25,
+
   },
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.8)",
     paddingVertical: 10,
-    paddingTop: 25,
+    paddingTop: 50,
     paddingHorizontal: 25,
   },
   orderDetailsContainer: {
@@ -564,6 +598,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
+    width: "100%",
+    marginVertical: 10,
+  },
+  buttonContainerReady: {
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    gap:15,
     width: "100%",
     marginVertical: 10,
   },
