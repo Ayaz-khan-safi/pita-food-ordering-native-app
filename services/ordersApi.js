@@ -28,7 +28,7 @@ export const ordersAPI = baseAPI.injectEndpoints({
       providesTags: [ORDERS],
     }),
     orderUpdate: builder.mutation({
-      query: (id, updateOrder) => ({
+      query: ({id, ...updateOrder}) => ({
         url: `/orders/update/${id}`,
         method: "PATCH",
         body: JSON.stringify(updateOrder),
@@ -36,6 +36,7 @@ export const ordersAPI = baseAPI.injectEndpoints({
       invalidatesTags: [ORDERS],
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {

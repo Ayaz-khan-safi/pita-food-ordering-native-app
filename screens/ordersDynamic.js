@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -20,6 +20,8 @@ import { useRoute } from "@react-navigation/native";
 import { MaterialIcons, AntDesign, Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
+import * as SecureStore from "expo-secure-store";
+import { decode as atob } from 'base-64';
 
 const buttons = [
   {
@@ -56,6 +58,7 @@ export default function DynamicOrders() {
   const route = useRoute();
 
   const navigation = useNavigation();
+
   const { data: allOrdersData } = useAllOrdersQuery();
 
   const allOrders = allOrdersData?.data?.result;
@@ -76,7 +79,6 @@ export default function DynamicOrders() {
   const dynamicOrdersDisplay = statusBasedOrders?.data;
 
   const updateIndex = (status) => {
-    console.log(status);
     setdynamicData(status);
   };
 
@@ -94,7 +96,6 @@ export default function DynamicOrders() {
       </TouchableOpacity>
     );
   };
-  console.log(dynamicOrdersDisplay?.result);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -108,53 +109,6 @@ export default function DynamicOrders() {
             </Text>
           </View>
           <View>
-            {/* <ScrollView
-              horizontal={true}
-              contentContainerStyle={styles.buttonContainerStyle}
-              showsHorizontalScrollIndicator={true}
-            >
-              {buttons.map((button, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={
-                    dynamicData === button.name
-                      ? styles.buttonClicked
-                      : styles.button
-                  }
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    updateIndex(button.name);
-                  }}
-                >
-                  <View
-                    style={{
-                      ...styles.buttonBadge,
-                      backgroundColor:
-                        dynamicData === button.name ? "#FFDF00" : "#757272",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: dynamicData === button.name ? "#000" : "#000",
-                        fontSize: 12,
-                      }}
-                    >
-                      {dynamicData === button.name &&
-                        dynamicOrdersDisplay?.metadata?.total}
-                    </Text>
-                  </View>
-                  <View style={styles.buttonInner}>
-                    <MaterialCommunityIcons
-                      name={button.icon}
-                      size={56}
-                      color={
-                        dynamicData === button.name ? "#FFDF00" : "#757272"
-                      }
-                    />
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </ScrollView> */}
             <FlatList
               data={buttons}
               renderItem={({ item }) => (

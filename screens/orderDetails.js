@@ -29,6 +29,7 @@ import { useUsersListQuery } from "../services/usersApi";
 import Steps from "react-native-steps";
 import InvoiceScreen from "../components/invoice";
 import RNPrint from "react-native-print";
+import { useNavigation } from "@react-navigation/native";
 
 const labels = ["Created", "Accepted", "Ready", "Delivered"];
 const configs = {
@@ -60,11 +61,12 @@ const windowHeight = Dimensions.get("window").height;
 
 export default function OrderDetailsScreen() {
   const [rider, setRider] = useState("");
-  const [deliveryTime, setDeliveryTime] = useState(0);
+  const [deliveryTime, setDeliveryTime] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [current, setCurrent] = useState(0);
 
   const route = useRoute();
+  const navigation = useNavigation();
 
   const dynamicID = route.params?.id;
 
@@ -88,32 +90,43 @@ export default function OrderDetailsScreen() {
 
   const userRider = riders?.data?.result;
 
-  const handleAssignRider = async () => {
-    console.log("Rider assigned!", deliveryTime, rider);
+  const handleAssignRider = async (orderStatus) => {
     const data = await {
       ...singleData?.data,
       riderId: rider,
       timing: deliveryTime,
+      orderStatus: orderStatus,
     };
-    console.log(singleData?.data?._id, data);
-    updateOrder(data)
+    delete data._id
+    updateOrder(JSON.stringify(data))
       .unwrap()
       .then((response) => {
         try {
-          console.log(response);
+          console.log("This is response: ", response);
+          setIsModalVisible(!isModalVisible);
         } catch (error) {
-          console.log(error);
+          console.log("This is error: ", error);
         }
       })
-      .catch((error) =>
-        console.log("There is a problem connecting to API.", error)
+      .catch(
+        (error) => console.log("There is a problem connecting to API.", error),
+        console.log(data),
+        console.log(rider)
       );
-    setIsModalVisible(!isModalVisible);
   };
 
   const handleGoToOrdersPage = async () => {
-    console.log("Go to orders page!");
-    
+    navigation.navigate("dynamic");
+  };
+
+  const handlePrint = async () => {
+    const printContent = <Text>Here is the print content</Text>;
+    console.log("Printing...");
+    setIsModalVisible(!isModalVisible);
+    // await RNPrint.print({
+    //   printerURL: "your-printer-url",
+    //   html: printContent,
+    // });
   };
 
   const toggleModal = () => {
@@ -131,13 +144,13 @@ export default function OrderDetailsScreen() {
                   styles.buttonCreated,
                   { backgroundColor: "#fff", color: "green" },
                 ]}
-                onPress={handleAssignRider("CANCELED")}
+                onPress={() => handleAssignRider("CANCELED")}
               >
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.buttonCreated, { backgroundColor: "green" }]}
-                onPress={handleAssignRider("ACCEPTED")}
+                onPress={() => handleAssignRider("ACCEPTED")}
               >
                 <Text style={{ ...styles.buttonText, color: "#fff" }}>
                   Accept the order{" "}
@@ -158,11 +171,11 @@ export default function OrderDetailsScreen() {
               <View style={{ flexDirection: "column", gap: 3 }}>
                 <View>
                   <Text style={styles.selectLabel}>
-                    Choose{" "}
+                    
                     {singleData?.data?.orderDeliverType === "DELIVERY"
                       ? "Delievery "
                       : "Pickup "}
-                    Time
+                    Time :
                   </Text>
                   <FlatList
                     data={deliveryTimeArray}
@@ -193,7 +206,7 @@ export default function OrderDetailsScreen() {
                 </View>
                 {singleData?.data?.orderDeliverType === "DELIVERY" ? (
                   <View>
-                    <Text style={styles.selectLabel}>Choose Rider</Text>
+                    <Text style={styles.selectLabel}>Rider</Text>
                     <Picker
                       selectedValue={rider}
                       onValueChange={(itemValue, itemIndex) =>
@@ -216,7 +229,7 @@ export default function OrderDetailsScreen() {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: "green" }]}
-                onPress={handleAssignRider("READY")}
+                onPress={() => handleAssignRider("READY")}
               >
                 <Text style={{ ...styles.buttonText, color: "#fff" }}>
                   Process the order{" "}
@@ -238,7 +251,7 @@ export default function OrderDetailsScreen() {
             </Text>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: "green" }]}
-              onPress={handleAssignRider}
+              onPress={handlePrint}
             >
               <Text style={{ ...styles.buttonText, color: "#fff" }}>
                 Print the order{" "}
@@ -259,7 +272,7 @@ export default function OrderDetailsScreen() {
             >
               <Text style={{ ...styles.buttonText, color: "#fff" }}>
                 <AntDesign name="back" size={16} color="white" /> Go back to
-                pending orders{" "}
+                orders page{" "}
               </Text>
             </TouchableOpacity>
           </View>
@@ -273,7 +286,7 @@ export default function OrderDetailsScreen() {
             >
               <Text style={{ ...styles.buttonText, color: "#fff" }}>
                 <AntDesign name="back" size={16} color="white" /> Go back to
-                pending orders{" "}
+                orders page{" "}
               </Text>
             </TouchableOpacity>
           </View>
@@ -281,15 +294,6 @@ export default function OrderDetailsScreen() {
     }
   };
 
-  const handlePrint = async () => {
-    const printContent = <Text>Here is the print content</Text>;
-    console.log("Printing...");
-    setIsModalVisible(!isModalVisible);
-    // await RNPrint.print({
-    //   printerURL: "your-printer-url",
-    //   html: printContent,
-    // });
-  };
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -535,12 +539,12 @@ export default function OrderDetailsScreen() {
         onBackdropPress={toggleModal}
         style={{ gap: 15 }}
       >
-        <InvoiceScreen />
+        <InvoiceScreen singleData={singleData}/>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: "green" }]}
           onPress={handlePrint}
         >
-          <Text style={styles.buttonText}>
+          <Text style={{...styles.buttonText, color: "#fff"}}>
             Print Invoice <AntDesign name="printer" size={16} color="white" />
           </Text>
         </TouchableOpacity>

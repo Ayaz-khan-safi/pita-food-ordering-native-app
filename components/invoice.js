@@ -1,11 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
+import { useFindOneOrderQuery } from "../services/ordersApi";
 
-const InvoiceScreen = () => {
+const InvoiceScreen = (singleData) => {
+  console.log(singleData);
+
   return (
     <View style={styles.container}>
       <View style={styles.companyInfo}>
-        <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
+        <View style={{ width: "100%", alignItems: "center", marginTop: 10 }}>
           <Image
             source={require("../assets/logo.png")}
             style={{
@@ -14,12 +17,11 @@ const InvoiceScreen = () => {
             }}
           ></Image>
         </View>
-        <View style={{ width: "100%", alignItems: "center", marginTop: 6 }}>
+        <View style={{ width: "100%", alignItems: "center", marginTop: 4 }}>
           <Text style={styles.companyAddress}>
             123 Company Street, City, Country
           </Text>
           <Text style={styles.companyAddress}>PHONE: 987263015</Text>
-          <Text style={styles.companyAddress}>GSTIN: 235131</Text>
         </View>
       </View>
 
@@ -44,20 +46,17 @@ const InvoiceScreen = () => {
         <View style={styles.itemHeader}>
           <Text style={styles.headerText}>Item</Text>
           <Text style={styles.headerText}>QTY</Text>
+          <Text style={styles.headerText}>Price</Text>
           <Text style={styles.headerText}>Amt</Text>
         </View>
-
-        <View style={styles.itemRow}>
-          <Text style={styles.itemCell}>Item 1</Text>
-          <Text style={styles.itemCell}>$20.00</Text>
-          <Text style={styles.itemCell}>$20.00</Text>
-        </View>
-
-        <View style={styles.itemRow}>
-          <Text style={styles.itemCell}>Item 2</Text>
-          <Text style={styles.itemCell}>$20.00</Text>
-          <Text style={styles.itemCell}>$15.00</Text>
-        </View>
+        {singleData?.data?.orderDetails.map((item, idx) => (
+          <View key={idx} style={styles.itemRow}>
+            <Text style={styles.itemCell}>{item.name}</Text>
+            <Text style={styles.itemCell}>{item.name}</Text>
+            <Text style={styles.itemCell}>{item.name}</Text>
+            <Text style={styles.itemCell}>{item.name}</Text>
+          </View>
+        ))}
       </View>
       <View style={styles.totalContainer}>
         <Text style={styles.totalLabel}>Total:</Text>
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
-    marginTop: 30,
+    marginTop: 10,
     marginRight: 16,
     gap: 15,
     marginBottom: 6,
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 12,
-    marginBottom: 6,
+    marginBottom: 3,
   },
   itemsContainer: {
     flex: 2,

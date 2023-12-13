@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet, Text, View } from "react-native";
 import Login from "./screens/login";
@@ -10,8 +10,11 @@ import DynamicOrders from "./screens/ordersDynamic";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
+
+
 function AppComponent() {
   const Stack = createStackNavigator();
+  
   return (
     <NavigationContainer>
       <StatusBar hidden />
@@ -47,6 +50,8 @@ function AppComponent() {
 }
 
 export default function App() {
+
+  
   return (
     <Provider store={store}>
       <AppComponent />
