@@ -1,24 +1,44 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
 
 const InvoiceScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.companyInfo}>
-        <Text style={styles.companyName}>Your Company Name</Text>
-        <Text style={styles.companyAddress}>123 Company Street, City, Country</Text>
+        <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
+          <Image
+            source={require("../assets/logo.png")}
+            style={{
+              width: 200,
+              height: 65,
+            }}
+          ></Image>
+        </View>
+        <View style={{ width: "100%", alignItems: "center", marginTop: 6 }}>
+          <Text style={styles.companyAddress}>
+            123 Company Street, City, Country
+          </Text>
+          <Text style={styles.companyAddress}>PHONE: 987263015</Text>
+          <Text style={styles.companyAddress}>GSTIN: 235131</Text>
+        </View>
       </View>
 
-
-      <View style={styles.invoiceDetails}>
-        <Text style={styles.label}>Invoice Number:</Text>
-        <Text style={styles.value}>12345</Text>
-
-        <Text style={styles.label}>Date:</Text>
-        <Text style={styles.value}>12/12/2023</Text>
-
+      <View style={styles.invoiceDetailsSection}>
+        <View style={styles.invoiceDetails}>
+          <Text style={styles.label}>Payment Mode:</Text>
+          <Text style={styles.value}>COD</Text>
+          <Text style={styles.label}>Customer:</Text>
+          <Text style={styles.value}>Ahmed Ali</Text>
+          <Text style={styles.label}>Address:</Text>
+          <Text style={styles.value}>123 Company Street, City, Country</Text>
+        </View>
+        <View style={styles.invoiceDetails}>
+          <Text style={styles.label}>Invoice #:</Text>
+          <Text style={styles.value}>12345</Text>
+          <Text style={styles.label}>Date:</Text>
+          <Text style={styles.value}>12/12/2023</Text>
+        </View>
       </View>
-
 
       <View style={styles.itemsContainer}>
         <View style={styles.itemHeader}>
@@ -38,8 +58,6 @@ const InvoiceScreen = () => {
           <Text style={styles.itemCell}>$20.00</Text>
           <Text style={styles.itemCell}>$15.00</Text>
         </View>
-
-
       </View>
       <View style={styles.totalContainer}>
         <Text style={styles.totalLabel}>Total:</Text>
@@ -53,71 +71,79 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   companyInfo: {
-    alignItems: 'center', 
+    alignItems: "center",
     marginBottom: 16,
   },
   companyName: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: "bold",
   },
+  companyDetails: {},
   companyAddress: {
-    fontSize: 16,
+    fontSize: 12,
+    textTransform: "uppercase",
   },
-  invoiceDetails: {
-    flex: 1, 
-    marginTop:50,
+  invoiceDetailsSection: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginTop: 30,
     marginRight: 16,
+    gap: 15,
+    marginBottom: 6,
   },
+
+  invoiceDetails: {},
   label: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 12,
+    fontWeight: "bold",
   },
   value: {
-    fontSize: 16,
-    marginBottom: 12,
+    fontSize: 12,
+    marginBottom: 6,
   },
   itemsContainer: {
     flex: 2,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
   },
   itemHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderBottomWidth: 1,
     padding: 8,
-    backgroundColor: '#e2e2e2',
+    backgroundColor: "#e2e2e2",
   },
   headerText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 12,
+    fontWeight: "bold",
   },
   itemRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     padding: 8,
     borderBottomWidth: 1,
-    borderColor: '#aaa',
+    borderColor: "#aaa",
   },
   itemCell: {
-    fontSize: 16,
+    fontSize: 12,
   },
   totalContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderTopWidth: 1,
   },
   totalLabel: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: "bold",
   },
   totalValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
 

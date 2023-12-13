@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import moment from "moment";
 
 export default function OrderCard({ item }) {
@@ -23,7 +23,17 @@ export default function OrderCard({ item }) {
     }
   }, []);
   return (
-    <View style={{...styles.container, backgroundColor: item.orderStatus === "DELIVERED" ?  "#fff" :  "#FFDF00",}}>
+    <View
+      style={{
+        ...styles.container,
+        backgroundColor:
+          item.orderStatus === "DELIVERED"
+            ? "#eee"
+            : item.orderStatus === "CANCELLED"
+            ? "#FF7F7F"
+            : "#FFDF00",
+      }}
+    >
       <View
         style={{
           ...styles.statusContainer,
@@ -56,14 +66,20 @@ export default function OrderCard({ item }) {
             <Text style={styles.orderObj}>Burger | Coke | Family Deal</Text>
           </View>
           <View>
-            <Text style={styles.paymentMode}><EvilIcons name="credit-card" size={14} color="green" /> {item?.paymentType}</Text>
+            <Text style={styles.paymentMode}>
+              <EvilIcons name="credit-card" size={14} color="green" />{" "}
+              {item?.paymentType}
+            </Text>
           </View>
         </View>
         <View style={styles.timeAddress}>
           <Text style={styles.address}>
-          <EvilIcons name="location" size={14} color="green" />{" "}{item?.address}, {item?.street}
+            <EvilIcons name="location" size={14} color="green" />{" "}
+            {item?.address}, {item?.street}
           </Text>
-          <Text style={styles.timeAgo}><Ionicons name="time-outline" size={13} color="green" />{" "}{timeAgo}</Text>
+          <Text style={styles.timeAgo}>
+            <Ionicons name="time-outline" size={13} color="green" /> {timeAgo}
+          </Text>
         </View>
       </View>
     </View>

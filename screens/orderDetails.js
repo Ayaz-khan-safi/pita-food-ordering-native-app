@@ -13,7 +13,14 @@ import {
 import Modal from "react-native-modal";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
-import { Ionicons, EvilIcons, MaterialIcons, FontAwesome5 ,AntDesign  } from "@expo/vector-icons";
+import {
+  Ionicons,
+  EvilIcons,
+  MaterialIcons,
+  FontAwesome5,
+  AntDesign,
+  Entypo,
+} from "@expo/vector-icons";
 import {
   useFindOneOrderQuery,
   useOrderUpdateMutation,
@@ -21,8 +28,7 @@ import {
 import { useUsersListQuery } from "../services/usersApi";
 import Steps from "react-native-steps";
 import InvoiceScreen from "../components/invoice";
-import RNPrint from 'react-native-print';
-
+import RNPrint from "react-native-print";
 
 const labels = ["Created", "Accepted", "Ready", "Delivered"];
 const configs = {
@@ -105,6 +111,11 @@ export default function OrderDetailsScreen() {
     setIsModalVisible(!isModalVisible);
   };
 
+  const handleGoToOrdersPage = async () => {
+    console.log("Go to orders page!");
+    
+  };
+
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
@@ -116,16 +127,19 @@ export default function OrderDetailsScreen() {
           <View style={styles.actionsContainer}>
             <View style={styles.buttonContainerCreated}>
               <TouchableOpacity
-                style={[styles.buttonCreated, { backgroundColor: "#aaa" }]}
-                onPress={handleAssignRider}
+                style={[
+                  styles.buttonCreated,
+                  { backgroundColor: "#fff", color: "green" },
+                ]}
+                onPress={handleAssignRider("CANCELED")}
               >
-                <Text style={styles.buttonText}>Cencel</Text>
+                <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.buttonCreated, { backgroundColor: "green" }]}
-                onPress={handleAssignRider}
+                onPress={handleAssignRider("ACCEPTED")}
               >
-                <Text style={styles.buttonText}>
+                <Text style={{ ...styles.buttonText, color: "#fff" }}>
                   Accept the order{" "}
                   <Ionicons
                     name="arrow-forward-sharp"
@@ -143,7 +157,13 @@ export default function OrderDetailsScreen() {
             <View style={styles.containerPicker}>
               <View style={{ flexDirection: "column", gap: 3 }}>
                 <View>
-                  <Text style={styles.selectLabel}>Choose Delivery Time</Text>
+                  <Text style={styles.selectLabel}>
+                    Choose{" "}
+                    {singleData?.data?.orderDeliverType === "DELIVERY"
+                      ? "Delievery "
+                      : "Pickup "}
+                    Time
+                  </Text>
                   <FlatList
                     data={deliveryTimeArray}
                     renderItem={({ item }) => (
@@ -171,33 +191,35 @@ export default function OrderDetailsScreen() {
                     horizontal={true}
                   />
                 </View>
-                <View>
-                  <Text style={styles.selectLabel}>Choose Rider</Text>
-                  <Picker
-                    selectedValue={rider}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setRider(itemValue)
-                    }
-                    style={styles.picker}
-                  >
-                    {userRider?.map((rider, idx) => (
-                      <Picker.Item
-                        key={rider.name}
-                        label={rider.name}
-                        value={rider._id}
-                      />
-                    ))}
-                  </Picker>
-                </View>
+                {singleData?.data?.orderDeliverType === "DELIVERY" ? (
+                  <View>
+                    <Text style={styles.selectLabel}>Choose Rider</Text>
+                    <Picker
+                      selectedValue={rider}
+                      onValueChange={(itemValue, itemIndex) =>
+                        setRider(itemValue)
+                      }
+                      style={styles.picker}
+                    >
+                      {userRider?.map((rider, idx) => (
+                        <Picker.Item
+                          key={rider.name}
+                          label={rider.name}
+                          value={rider._id}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
+                ) : null}
               </View>
             </View>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: "green" }]}
-                onPress={handleAssignRider}
+                onPress={handleAssignRider("READY")}
               >
-                <Text style={styles.buttonText}>
-                  Proceed to Print{" "}
+                <Text style={{ ...styles.buttonText, color: "#fff" }}>
+                  Process the order{" "}
                   <Ionicons
                     name="arrow-forward-sharp"
                     size={14}
@@ -211,48 +233,62 @@ export default function OrderDetailsScreen() {
       case "READY":
         return (
           <View style={styles.buttonContainerReady}>
-            <Text style={styles.buttonText}>This order is ready to deliver!</Text>
+            <Text style={styles.buttonTextReady}>
+              This order is ready to deliver!
+            </Text>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: "green" }]}
               onPress={handleAssignRider}
             >
-              <Text style={styles.buttonText}>
-                Remind the Rider{" "}
-                <EvilIcons name="bell" size={20} color="white" />
+              <Text style={{ ...styles.buttonText, color: "#fff" }}>
+                Print the order{" "}
+                <AntDesign name="printer" size={16} color="white" />
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      case "DELIVERED":
+        return (
+          <View style={styles.buttonContainerReady}>
+            <Text style={styles.buttonTextReady}>
+              This order is already Delivered!
+            </Text>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "green" }]}
+              onPress={handleGoToOrdersPage}
+            >
+              <Text style={{ ...styles.buttonText, color: "#fff" }}>
+                <AntDesign name="back" size={16} color="white" /> Go back to
+                pending orders{" "}
               </Text>
             </TouchableOpacity>
           </View>
         );
       default:
         return (
-          <Text style={styles.custInfoText}>Rendered for default case</Text>
+          <View style={styles.buttonContainerReady}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "green" }]}
+              onPress={handleGoToOrdersPage}
+            >
+              <Text style={{ ...styles.buttonText, color: "#fff" }}>
+                <AntDesign name="back" size={16} color="white" /> Go back to
+                pending orders{" "}
+              </Text>
+            </TouchableOpacity>
+          </View>
         );
     }
   };
 
-  // const mapStatusToValue = (status) => {
-  //   switch (status) {
-  //     case "CREATED":
-  //       setCurrent(0);
-  //     case "ACCEPTED":
-  //       setCurrent(1);
-  //     case "READY":
-  //       setCurrent(2);
-  //     case "DELIVERED":
-  //       setCurrent(3);
-  //     default:
-  //       setCurrent(0);
-  //   }
-  // };
-  // mapStatusToValue(singleData?.data?.orderStatus);
   const handlePrint = async () => {
-    const printContent = <Text>Here is the print content</Text>
-
-    await RNPrint.print({
-      printerURL: 'your-printer-url',
-      html: printContent,
-    });
-    console.log("Printing...")
+    const printContent = <Text>Here is the print content</Text>;
+    console.log("Printing...");
+    setIsModalVisible(!isModalVisible);
+    // await RNPrint.print({
+    //   printerURL: "your-printer-url",
+    //   html: printContent,
+    // });
   };
   return (
     <ImageBackground
@@ -295,7 +331,7 @@ export default function OrderDetailsScreen() {
           {singleData?.data?.orderDeliverType === "DELIVERY" ? (
             <Text style={styles.custInfoText}>
               <EvilIcons name="location" size={18} color="#fff" />{" "}
-              {`${singleData?.data?.street} ${singleData?.data?.address}`}
+              {`${singleData?.data?.address}`}
             </Text>
           ) : (
             ""
@@ -494,17 +530,20 @@ export default function OrderDetailsScreen() {
           {renderContent((orderStatus = singleData?.data?.orderStatus))}
         </View>
       </View>
-      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
-        <InvoiceScreen/>
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={toggleModal}
+        style={{ gap: 15 }}
+      >
+        <InvoiceScreen />
         <TouchableOpacity
-                style={[styles.button, { backgroundColor: "green" }]}
-                onPress={handlePrint}
-              >
-                <Text style={styles.buttonText}>
-                  Print Invoice{" "}
-                  <AntDesign name="printer" size={16} color="white" />
-                </Text>
-              </TouchableOpacity>
+          style={[styles.button, { backgroundColor: "green" }]}
+          onPress={handlePrint}
+        >
+          <Text style={styles.buttonText}>
+            Print Invoice <AntDesign name="printer" size={16} color="white" />
+          </Text>
+        </TouchableOpacity>
       </Modal>
     </ImageBackground>
   );
@@ -514,7 +553,6 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
-
   },
   overlay: {
     flex: 1,
@@ -604,7 +642,7 @@ const styles = StyleSheet.create({
   buttonContainerReady: {
     flexDirection: "column",
     justifyContent: "space-evenly",
-    gap:15,
+    gap: 15,
     width: "100%",
     marginVertical: 10,
   },
@@ -628,8 +666,13 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     // paddingHorizontal: 30,
   },
-  buttonText: {
+  buttonTextReady: {
     color: "white",
+    fontSize: 18,
+    textAlign: "center",
+  },
+  buttonText: {
+    // color: "white",
     fontSize: 14,
     textAlign: "center",
   },

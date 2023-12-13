@@ -7,6 +7,7 @@ import {
   Text,
   FlatList,
   ScrollView,
+  Image,
 } from "react-native";
 import dummyData from "../data/dummy";
 import OrderCard from "../components/orderCard";
@@ -16,8 +17,9 @@ import {
   useAllOrdersQuery,
 } from "../services/ordersApi";
 import { useRoute } from "@react-navigation/native";
-import { MaterialIcons, AntDesign } from "@expo/vector-icons";
+import { MaterialIcons, AntDesign, Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Animatable from "react-native-animatable";
 
 const buttons = [
   {
@@ -41,14 +43,14 @@ const buttons = [
     color: "#9b59b6",
   },
   {
-    name: "Cancelled",
+    name: "Canceled",
     icon: "progress-close",
     color: "#e74c3c",
   },
 ];
 
 export default function DynamicOrders() {
-  const [dynamicData, setdynamicData] = useState("Accepted");
+  const [dynamicData, setdynamicData] = useState("Created");
   const [limit, setLimit] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
   const route = useRoute();
@@ -58,7 +60,11 @@ export default function DynamicOrders() {
 
   const allOrders = allOrdersData?.data?.result;
 
-  const { data: statusBasedOrders } = useFindSpecificOrdersQuery(
+  const {
+    data: statusBasedOrders,
+    isLoading,
+    isFetching,
+  } = useFindSpecificOrdersQuery(
     {
       page: pageNumber,
       limit: limit,
@@ -88,6 +94,7 @@ export default function DynamicOrders() {
       </TouchableOpacity>
     );
   };
+  console.log(dynamicOrdersDisplay?.result);
   return (
     <ImageBackground
       source={require("../assets/bg-img.jpg")}
@@ -187,6 +194,15 @@ export default function DynamicOrders() {
                       color={dynamicData === item.name ? "#FFDF00" : "#757272"}
                     />
                   </View>
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontSize: 12,
+                      color: dynamicData === item.name ? "#FFDF00" : "#757272",
+                    }}
+                  >
+                    {item.name}
+                  </Text>
                 </TouchableOpacity>
               )}
               keyExtractor={(item) => item.name}
@@ -194,6 +210,7 @@ export default function DynamicOrders() {
               contentContainerStyle={styles.buttonContainerStyle}
             />
           </View>
+
           <View
             style={{
               flexDirection: "row",
@@ -202,18 +219,68 @@ export default function DynamicOrders() {
             }}
           >
             <Text style={{ color: "#757272", fontSize: 12 }}>
-              Showing {dynamicOrdersDisplay?.result?.length} out of{" "}
-              {dynamicOrdersDisplay?.metadata?.total}
+              {`Showing ${
+                dynamicOrdersDisplay?.metadata?.total > 1
+                  ? dynamicOrdersDisplay?.result?.length
+                  : 0
+              } out of ${
+                dynamicOrdersDisplay?.metadata?.total > 1
+                  ? dynamicOrdersDisplay?.metadata?.total
+                  : 0
+              }`}
             </Text>
           </View>
+
           <View>
-            <FlatList
-              style={styles.cardsContainerStyle}
-              data={dynamicOrdersDisplay?.result}
-              renderItem={renderOrderCard}
-              keyExtractor={(item, idx) => idx}
-              horizontal={false}
-            />
+            {isFetching ? (
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  height: "70%",
+                  gap: 10,
+                  // backgroundColor: "#aaa",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Animatable.View
+                  animation="rotate"
+                  iterationCount="infinite"
+                  easing="linear"
+                >
+                  <AntDesign name="loading1" size={36} color="#757272" />
+                </Animatable.View>
+                <Text style={{ color: "#757272", fontSize: 14 }}>
+                  Fetching Data...
+                </Text>
+              </View>
+            ) : dynamicOrdersDisplay?.metadata?.total > 1 ? (
+              <FlatList
+                style={styles.cardsContainerStyle}
+                data={dynamicOrdersDisplay?.result}
+                renderItem={renderOrderCard}
+                keyExtractor={(item, idx) => idx}
+                horizontal={false}
+              />
+            ) : (
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  height: "70%",
+                  gap: 10,
+                  // backgroundColor: "#aaa",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Entypo name="emoji-sad" size={36} color="#757272" />
+                <Text style={{ color: "#757272", fontSize: 14 }}>
+                  No order found
+                </Text>
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -247,9 +314,11 @@ const styles = StyleSheet.create({
   },
   button: {
     marginRight: 30,
+    alignItems: "center",
   },
   buttonClicked: {
     marginRight: 30,
+    alignItems: "center",
   },
   buttonInner: {
     display: "flex",
