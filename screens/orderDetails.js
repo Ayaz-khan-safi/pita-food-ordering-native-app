@@ -31,7 +31,8 @@ import InvoiceScreen from "../components/invoice";
 import RNPrint from "react-native-print";
 import { useNavigation } from "@react-navigation/native";
 
-const labels = ["Created", "Accepted", "Ready", "Delivered"];
+const labels = ["Accept", "Time & Rider", "Print"];
+const labels2 = ["Accept", "Time", "Print"];
 const configs = {
   stepIndicatorSize: 24,
   currentStepIndicatorSize: 42,
@@ -56,7 +57,13 @@ const configs = {
   currentStepLabelColor: "#FFDF00",
 };
 
-const deliveryTimeArray = ["15 min", "30 min", "45 min", "60 min", "Others"];
+const deliveryTimeArray = [
+  "15 min",
+  "30 min",
+  "45 min",
+  "1 hour",
+  "Time undefined",
+];
 const windowHeight = Dimensions.get("window").height;
 
 export default function OrderDetailsScreen() {
@@ -90,28 +97,32 @@ export default function OrderDetailsScreen() {
 
   const userRider = riders?.data?.result;
 
-  const handleAssignRider = async (orderStatus) => {
-    const data = await {
-      ...singleData?.data,
-      riderId: rider,
-      timing: deliveryTime,
-      orderStatus: orderStatus,
-    };
-    delete data._id
-    updateOrder(JSON.stringify(data))
+  const handleAssignRider = async ({ status, rider, deliveryTime }) => {
+    const data = {};
+
+    if (status) {
+      data["orderStatus"] = status;
+    }
+    if (deliveryTime) {
+      data["timing"] = deliveryTime;
+    }
+    if (rider) {
+      data["riderId"] = rider;
+    }
+    console.log("THIS IS DATA", JSON.stringify(data));
+    updateOrder({ id: singleData?.data?._id, body: JSON.stringify(data) })
       .unwrap()
       .then((response) => {
+        const newStatus = response?.data?.orderStatus;
         try {
-          console.log("This is response: ", response);
-          setIsModalVisible(!isModalVisible);
+          console.log("This is response: ", newStatus);
         } catch (error) {
           console.log("This is error: ", error);
         }
       })
       .catch(
         (error) => console.log("There is a problem connecting to API.", error),
-        console.log(data),
-        console.log(rider)
+        console.log(JSON.stringify(data))
       );
   };
 
@@ -144,13 +155,17 @@ export default function OrderDetailsScreen() {
                   styles.buttonCreated,
                   { backgroundColor: "#fff", color: "green" },
                 ]}
-                onPress={() => handleAssignRider("CANCELED")}
+                onPress={() =>
+                  handleAssignRider({ status: "CANCELED", rider, deliveryTime })
+                }
               >
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.buttonCreated, { backgroundColor: "green" }]}
-                onPress={() => handleAssignRider("ACCEPTED")}
+                onPress={() =>
+                  handleAssignRider({ status: "ACCEPTED", rider, deliveryTime })
+                }
               >
                 <Text style={{ ...styles.buttonText, color: "#fff" }}>
                   Accept the order{" "}
@@ -171,7 +186,6 @@ export default function OrderDetailsScreen() {
               <View style={{ flexDirection: "column", gap: 3 }}>
                 <View>
                   <Text style={styles.selectLabel}>
-                    
                     {singleData?.data?.orderDeliverType === "DELIVERY"
                       ? "Delievery "
                       : "Pickup "}
@@ -229,7 +243,9 @@ export default function OrderDetailsScreen() {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: "green" }]}
-                onPress={() => handleAssignRider("READY")}
+                onPress={() =>
+                  handleAssignRider({ status: "READY", rider, deliveryTime })
+                }
               >
                 <Text style={{ ...styles.buttonText, color: "#fff" }}>
                   Process the order{" "}
@@ -342,23 +358,28 @@ export default function OrderDetailsScreen() {
           )}
 
           <View style={styles.stepperContainer}>
-            <Steps
-              configs={configs}
-              count={4}
-              current={
-                singleData?.data?.orderStatus === "CREATED"
-                  ? 0
-                  : singleData?.data?.orderStatus === "ACCEPTED"
-                  ? 1
-                  : singleData?.data?.orderStatus === "READY"
-                  ? 2
-                  : singleData?.data?.orderStatus === "DELIVERED"
-                  ? 3
-                  : 0
-              }
-              labels={labels}
-              reversed={false}
-            />
+            {singleData?.data?.orderStatus != "CANCELED" &&
+            singleData?.data?.orderStatus != "DELIVERED" ? (
+              <Steps
+                configs={configs}
+                count={3}
+                current={
+                  singleData?.data?.orderStatus === "CREATED"
+                    ? 0
+                    : singleData?.data?.orderStatus === "ACCEPTED"
+                    ? 1
+                    : singleData?.data?.orderStatus === "READY"
+                    ? 3
+                    : null
+                }
+                labels={
+                  singleData?.data?.orderDeliverType === "DELIVERY"
+                    ? labels
+                    : labels2
+                }
+                reversed={false}
+              />
+            ) : null}
           </View>
         </View>
         <View style={styles.orderDetailsContainer}>
@@ -539,12 +560,12 @@ export default function OrderDetailsScreen() {
         onBackdropPress={toggleModal}
         style={{ gap: 15 }}
       >
-        <InvoiceScreen singleData={singleData}/>
+        <InvoiceScreen singleData={singleData} />
         <TouchableOpacity
           style={[styles.button, { backgroundColor: "green" }]}
           onPress={handlePrint}
         >
-          <Text style={{...styles.buttonText, color: "#fff"}}>
+          <Text style={{ ...styles.buttonText, color: "#fff" }}>
             Print Invoice <AntDesign name="printer" size={16} color="white" />
           </Text>
         </TouchableOpacity>
@@ -632,7 +653,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   TotalPrice: {
-    fontSize: 42,
+    fontSize: 28,
     fontWeight: "bold",
     color: "white",
     textAlign: "right",
