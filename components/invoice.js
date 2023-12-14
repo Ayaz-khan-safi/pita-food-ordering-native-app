@@ -3,7 +3,10 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { useFindOneOrderQuery } from "../services/ordersApi";
 
 const InvoiceScreen = (singleData) => {
-  console.log(singleData);
+  console.log(
+    "This is single Data shown in the print screen",
+    singleData.singleData
+  );
 
   return (
     <View style={styles.container}>
@@ -44,23 +47,36 @@ const InvoiceScreen = (singleData) => {
 
       <View style={styles.itemsContainer}>
         <View style={styles.itemHeader}>
-          <Text style={styles.headerText}>Item</Text>
+          <Text style={styles.headerTextName}>Item Name</Text>
           <Text style={styles.headerText}>QTY</Text>
           <Text style={styles.headerText}>Price</Text>
-          <Text style={styles.headerText}>Amt</Text>
+          <Text style={styles.headerTextLast}>Amt</Text>
         </View>
-        {singleData?.data?.orderDetails.map((item, idx) => (
-          <View key={idx} style={styles.itemRow}>
-            <Text style={styles.itemCell}>{item.name}</Text>
-            <Text style={styles.itemCell}>{item.name}</Text>
-            <Text style={styles.itemCell}>{item.name}</Text>
-            <Text style={styles.itemCell}>{item.name}</Text>
+        {singleData?.singleData?.data?.orderDetails.map((item, idx) => (
+          <View>
+            <View key={idx} style={styles.itemRow}>
+              <Text style={styles.productNameCell}>{item?.productName}</Text>
+              <Text style={styles.itemCell}>{item.productQuantity}</Text>
+              <Text style={styles.itemCell}>${item.productPrice}</Text>
+              <Text style={styles.itemCellLast}>${item.productSubTotal}</Text>
+            </View>
+            {/* Map through addons for the current item */}
+            {item?.addons?.map((addon, index) => (
+              <View key={index} style={styles.itemRow}>
+                <Text style={styles.productNameCell}>{addon?.addonName}</Text>
+                <Text style={styles.itemCell}>{addon.addonQuantity}</Text>
+                <Text style={styles.itemCell}>${addon.addonPrice}</Text>
+                <Text style={styles.itemCellLast}>${addon.addonSubTotal}</Text>
+              </View>
+            ))}
           </View>
         ))}
       </View>
       <View style={styles.totalContainer}>
         <Text style={styles.totalLabel}>Total:</Text>
-        <Text style={styles.totalValue}>$35.00</Text>
+        <Text style={styles.totalValue}>
+          ${singleData?.singleData?.data?.totalAmount}
+        </Text>
       </View>
     </View>
   );
@@ -118,8 +134,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#e2e2e2",
   },
   headerText: {
+    flex: 1,
     fontSize: 12,
     fontWeight: "bold",
+    textAlign: "center",
+  },
+  headerTextName: {
+    flex: 3,
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  headerTextLast: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: "bold",
+    textAlign: "right",
   },
   itemRow: {
     flexDirection: "row",
@@ -129,7 +158,17 @@ const styles = StyleSheet.create({
     borderColor: "#aaa",
   },
   itemCell: {
+    flex: 1,
     fontSize: 12,
+    textAlign: "center",
+  },
+  productNameCell: {
+    flex: 3,
+  },
+  itemCellLast: {
+    flex: 1,
+    fontSize: 12,
+    textAlign: "right",
   },
   totalContainer: {
     flexDirection: "row",

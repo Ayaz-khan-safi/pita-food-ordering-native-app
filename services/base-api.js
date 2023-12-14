@@ -5,7 +5,8 @@ import { EXPO_DEFAULT_BASE_URL } from "@env";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: EXPO_DEFAULT_BASE_URL,
-  baseUrl: "http://192.168.18.32:8000/",
+  // baseUrl: "https://apis.mediatechtics.com:8000/",
+  baseUrl: "https://apis.mediatechtics.com:8000/",
   prepareHeaders: async (headers) => {
     const token = await SecureStore.getItemAsync("token");
     if (token) {

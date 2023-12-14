@@ -30,6 +30,7 @@ import Steps from "react-native-steps";
 import InvoiceScreen from "../components/invoice";
 import RNPrint from "react-native-print";
 import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 const labels = ["Accept", "Time & Rider", "Print"];
 const labels2 = ["Accept", "Time", "Print"];
@@ -560,6 +561,7 @@ export default function OrderDetailsScreen() {
         onBackdropPress={toggleModal}
         style={{ gap: 15 }}
       >
+        <StatusBar hidden={true} />
         <InvoiceScreen singleData={singleData} />
         <TouchableOpacity
           style={[styles.button, { backgroundColor: "green" }]}

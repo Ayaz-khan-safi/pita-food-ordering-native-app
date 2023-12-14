@@ -10,11 +10,9 @@ import DynamicOrders from "./screens/ordersDynamic";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
-
-
 function AppComponent() {
   const Stack = createStackNavigator();
-  
+
   return (
     <NavigationContainer>
       <StatusBar hidden />
@@ -50,8 +48,6 @@ function AppComponent() {
 }
 
 export default function App() {
-
-  
   return (
     <Provider store={store}>
       <AppComponent />

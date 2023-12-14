@@ -29,8 +29,8 @@ export default function OrderCard({ item }) {
         backgroundColor:
           item.orderStatus === "DELIVERED"
             ? "#eee"
-            : item.orderStatus === "CANCELLED"
-            ? "#FF7F7F"
+            : item.orderStatus === "CANCELED"
+            ? "#e3cdcd"
             : "#FFDF00",
       }}
     >
