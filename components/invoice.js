@@ -3,11 +3,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { useFindOneOrderQuery } from "../services/ordersApi";
 
 const InvoiceScreen = (singleData) => {
-  console.log(
-    "This is single Data shown in the print screen",
-    singleData.singleData
-  );
-
+  console.log(singleData?.singleData?.data)
   return (
     <View style={styles.container}>
       <View style={styles.companyInfo}>
@@ -31,39 +27,38 @@ const InvoiceScreen = (singleData) => {
       <View style={styles.invoiceDetailsSection}>
         <View style={styles.invoiceDetails}>
           <Text style={styles.label}>Payment Mode:</Text>
-          <Text style={styles.value}>COD</Text>
+          <Text style={styles.value}>{singleData?.singleData?.data?.paymentType}</Text>
           <Text style={styles.label}>Customer:</Text>
-          <Text style={styles.value}>Ahmed Ali</Text>
+          <Text style={styles.value}>{singleData?.singleData?.data?.customerData?.name}</Text>
           <Text style={styles.label}>Address:</Text>
-          <Text style={styles.value}>123 Company Street, City, Country</Text>
+          <Text style={styles.value}>{singleData?.singleData?.data?.customerData?.address}</Text>
         </View>
         <View style={styles.invoiceDetails}>
           <Text style={styles.label}>Invoice #:</Text>
           <Text style={styles.value}>12345</Text>
           <Text style={styles.label}>Date:</Text>
-          <Text style={styles.value}>12/12/2023</Text>
+          <Text style={styles.value}>{singleData?.singleData?.data?.createdAt.split("T")[0]}</Text>
         </View>
       </View>
 
       <View style={styles.itemsContainer}>
         <View style={styles.itemHeader}>
           <Text style={styles.headerTextName}>Item Name</Text>
-          <Text style={styles.headerText}>QTY</Text>
+          <Text style={styles.headerText}>Qty</Text>
           <Text style={styles.headerText}>Price</Text>
           <Text style={styles.headerTextLast}>Amt</Text>
         </View>
         {singleData?.singleData?.data?.orderDetails.map((item, idx) => (
-          <View>
-            <View key={idx} style={styles.itemRow}>
+          <View key={item._id}  style={styles.mapContainer}>
+            <View style={styles.itemRow}>
               <Text style={styles.productNameCell}>{item?.productName}</Text>
               <Text style={styles.itemCell}>{item.productQuantity}</Text>
               <Text style={styles.itemCell}>${item.productPrice}</Text>
               <Text style={styles.itemCellLast}>${item.productSubTotal}</Text>
             </View>
-            {/* Map through addons for the current item */}
             {item?.addons?.map((addon, index) => (
-              <View key={index} style={styles.itemRow}>
-                <Text style={styles.productNameCell}>{addon?.addonName}</Text>
+              <View key={addon._id} style={styles.addonRow}>
+                <Text style={styles.productNameCell}> + {addon?.addonName}</Text>
                 <Text style={styles.itemCell}>{addon.addonQuantity}</Text>
                 <Text style={styles.itemCell}>${addon.addonPrice}</Text>
                 <Text style={styles.itemCellLast}>${addon.addonSubTotal}</Text>
@@ -130,8 +125,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    padding: 8,
-    backgroundColor: "#e2e2e2",
+    padding: 5,
+    backgroundColor: "#c7c7c7",
   },
   headerText: {
     flex: 1,
@@ -150,12 +145,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "right",
   },
+  mapContainer:{
+    backgroundColor: "#f8f8f8",
+    marginBottom: 1,
+  },
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 8,
-    borderBottomWidth: 1,
-    borderColor: "#aaa",
+    padding: 5,
+    backgroundColor: "#ededed",
+  },
+  addonRow:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 5,
   },
   itemCell: {
     flex: 1,
@@ -164,10 +167,11 @@ const styles = StyleSheet.create({
   },
   productNameCell: {
     flex: 3,
+    fontSize: 12,
   },
   itemCellLast: {
     flex: 1,
-    fontSize: 12,
+    fontSize: 11,
     textAlign: "right",
   },
   totalContainer: {
