@@ -5,7 +5,7 @@ import { EXPO_DEFAULT_BASE_URL } from "@env";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: EXPO_DEFAULT_BASE_URL,
-  baseUrl: "https://apis.mediatechtics.com/",
+  baseUrl: "https://be.mediatechtics.com/",
   prepareHeaders: async (headers) => {
     const token = await SecureStore.getItemAsync("token");
     if (token) {
