@@ -21,7 +21,7 @@ import { MaterialIcons, AntDesign, Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import * as SecureStore from "expo-secure-store";
-import { decode as atob } from 'base-64';
+import { decode as atob } from "base-64";
 
 const buttons = [
   {
@@ -55,6 +55,8 @@ export default function DynamicOrders() {
   const [dynamicData, setdynamicData] = useState("Created");
   const [limit, setLimit] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const route = useRoute();
 
   const navigation = useNavigation();
@@ -96,6 +98,30 @@ export default function DynamicOrders() {
       </TouchableOpacity>
     );
   };
+
+  const handleEndReached = () => {
+    if (!isLoadingMore && dynamicOrdersDisplay?.metadata?.total > 0) {
+      setIsLoadingMore(true);
+      setLimit((prevLimit) => prevLimit + 10);
+      setPageNumber((prevPageNumber) => prevPageNumber + 1);
+    }
+  };
+
+  useEffect(() => {
+    if (isLoadingMore) {
+      // Use the refetch function from useFindSpecificOrdersQuery to fetch more data
+      statusBasedOrders
+        .refetch({
+          page: pageNumber,
+          limit: limit,
+          statusOrder: dynamicData.toUpperCase(),
+        })
+        .then(() => {
+          setIsLoadingMore(false);
+        });
+    }
+  }, [isLoadingMore]);
+
   return (
     <ImageBackground
       source={require("../assets/bgimg.jpg")}
@@ -216,6 +242,31 @@ export default function DynamicOrders() {
                 renderItem={renderOrderCard}
                 keyExtractor={(item, idx) => idx}
                 horizontal={false}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.1}
+                ListFooterComponent={
+                  isLoadingMore && (
+                    <View
+                      style={{
+                        width: "100%",
+                        alignItems: "center",
+                        height: 50,
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Animatable.View
+                        animation="rotate"
+                        iterationCount="infinite"
+                        easing="linear"
+                      >
+                        <AntDesign name="loading1" size={36} color="#757272" />
+                      </Animatable.View>
+                      <Text style={{ color: "#757272", fontSize: 14 }}>
+                        Loading More...
+                      </Text>
+                    </View>
+                  )
+                }
               />
             ) : (
               <View
