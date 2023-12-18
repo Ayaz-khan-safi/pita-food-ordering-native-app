@@ -31,6 +31,7 @@ import InvoiceScreen from "../components/invoice";
 import RNPrint from "react-native-print";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import { LogBox } from "react-native";
 
 const labels = ["Accept", "Time & Rider", "Print"];
 const labels2 = ["Accept", "Time", "Print"];
@@ -68,6 +69,9 @@ const deliveryTimeArray = [
 const windowHeight = Dimensions.get("window").height;
 
 export default function OrderDetailsScreen() {
+  useEffect(() => {
+    LogBox.ignoreLogs(["Animated: `useNativeDriver`"]);
+  }, []);
   const [rider, setRider] = useState("");
   const [deliveryTime, setDeliveryTime] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -379,6 +383,7 @@ export default function OrderDetailsScreen() {
                     : labels2
                 }
                 reversed={false}
+                useNativeDriver={false}
               />
             ) : null}
           </View>
