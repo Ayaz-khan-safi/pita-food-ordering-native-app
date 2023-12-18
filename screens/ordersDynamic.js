@@ -98,7 +98,7 @@ export default function DynamicOrders() {
   };
   return (
     <ImageBackground
-      source={require("../assets/bg-img.jpg")}
+      source={require("../assets/bgimg.jpg")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
