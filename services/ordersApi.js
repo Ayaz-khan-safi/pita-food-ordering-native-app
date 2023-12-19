@@ -18,7 +18,15 @@ export const ordersAPI = baseAPI.injectEndpoints({
         url: `/orders/findAll`,
         method: "GET",
       }),
-      providesTags: [ORDERS],
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+      merge: (currentCache, newItems) => {
+        currentCache.push(...newItems);
+      },
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg !== previousArg;
+      },
     }),
     findOneOrder: builder.query({
       query: ({ id }) => ({

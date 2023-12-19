@@ -52,10 +52,9 @@ const buttons = [
 ];
 
 export default function DynamicOrders() {
-  const [dynamicData, setdynamicData] = useState("Created");
+  const [dynamicData, setDynamicData] = useState("Created");
   const [limit, setLimit] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const route = useRoute();
 
@@ -81,7 +80,9 @@ export default function DynamicOrders() {
   const dynamicOrdersDisplay = statusBasedOrders?.data;
 
   const updateIndex = (status) => {
-    setdynamicData(status);
+    setDynamicData(status);
+    setLimit(10);
+    setPageNumber(1);
   };
 
   const handleCardClick = (item) => {
@@ -100,28 +101,9 @@ export default function DynamicOrders() {
   };
 
   const handleEndReached = () => {
-    if (!isLoadingMore && dynamicOrdersDisplay?.metadata?.total > 0) {
-      setIsLoadingMore(true);
-      setLimit((prevLimit) => prevLimit + 10);
-      setPageNumber((prevPageNumber) => prevPageNumber + 1);
-    }
+    setLimit((prevLimit) => prevLimit + 10);
+    console.log("page scrolled to bottom");
   };
-
-  useEffect(() => {
-    if (isLoadingMore) {
-      // Use the refetch function from useFindSpecificOrdersQuery to fetch more data
-      statusBasedOrders
-        .refetch({
-          page: pageNumber,
-          limit: limit,
-          statusOrder: dynamicData.toUpperCase(),
-        })
-        .then(() => {
-          setIsLoadingMore(false);
-        });
-    }
-  }, [isLoadingMore]);
-
   return (
     <ImageBackground
       source={require("../assets/bgimg.jpg")}
@@ -212,7 +194,7 @@ export default function DynamicOrders() {
           </View>
 
           <View>
-            {isFetching ? (
+            {isLoading ? (
               <View
                 style={{
                   width: "100%",
@@ -243,9 +225,10 @@ export default function DynamicOrders() {
                 keyExtractor={(item, idx) => idx}
                 horizontal={false}
                 onEndReached={handleEndReached}
-                onEndReachedThreshold={0.1}
+                onEndReachedThreshold={0.4}
                 ListFooterComponent={
-                  isLoadingMore && (
+                  dynamicOrdersDisplay?.result?.length !=
+                  dynamicOrdersDisplay?.metadata?.total ? (
                     <View
                       style={{
                         width: "100%",
@@ -261,9 +244,17 @@ export default function DynamicOrders() {
                       >
                         <AntDesign name="loading1" size={36} color="#757272" />
                       </Animatable.View>
-                      <Text style={{ color: "#757272", fontSize: 14 }}>
-                        Loading More...
-                      </Text>
+                    </View>
+                  ) : (
+                    <View
+                      style={{
+                        width: "100%",
+                        alignItems: "center",
+                        height: 50,
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text style={{ color: "#aaa" }}>No more orders!</Text>
                     </View>
                   )
                 }
