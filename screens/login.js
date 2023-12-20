@@ -56,8 +56,8 @@ export default function Login() {
       keyboardVerticalOffset={Platform.OS === "android" ? -80 : 0}
     >
       <ImageBackground
-        source={require("../assets/bgimg.jpg")}
-        style={styles.backgroundImage}
+        source={require("../assets/bgimg.png")}
+        style={styles.backgroundImage}png
       >
         <View style={styles.overlay}>
           <View style={styles.formContainer}>

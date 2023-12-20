@@ -317,7 +317,7 @@ export default function OrderDetailsScreen() {
 
   return (
     <ImageBackground
-      source={require("../assets/bgimg.jpg")}
+      source={require("../assets/bgimg.png")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
