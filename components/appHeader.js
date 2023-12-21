@@ -16,7 +16,7 @@ export default function AppHeader(props) {
       const accessToken = await SecureStore.getItemAsync("token");
       if (accessToken && (await accessTokenValidation(accessToken))) {
       } else {
-        navigation.navigate("login");
+        navigation.navigate("login");r
       }
     } catch (error) {
       console.error("Error retrieving or validating access token:", error);

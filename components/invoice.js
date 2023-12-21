@@ -3,18 +3,18 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { useFindOneOrderQuery } from "../services/ordersApi";
 
 const InvoiceScreen = (singleData) => {
-  console.log(singleData?.singleData?.data)
+  console.log(singleData?.singleData?.data);
   return (
     <View style={styles.container}>
       <View style={styles.companyInfo}>
         <View style={{ width: "100%", alignItems: "center", marginTop: 10 }}>
-          <Image
-            source={require("../assets/logo.png")}
+          {/* <Image
+            source={require("../images/logo.png")}
             style={{
               width: 200,
               height: 65,
             }}
-          ></Image>
+          ></Image> */}
         </View>
         <View style={{ width: "100%", alignItems: "center", marginTop: 4 }}>
           <Text style={styles.companyAddress}>
@@ -27,17 +27,25 @@ const InvoiceScreen = (singleData) => {
       <View style={styles.invoiceDetailsSection}>
         <View style={styles.invoiceDetails}>
           <Text style={styles.label}>Payment Mode:</Text>
-          <Text style={styles.value}>{singleData?.singleData?.data?.paymentType}</Text>
+          <Text style={styles.value}>
+            {singleData?.singleData?.data?.paymentType}
+          </Text>
           <Text style={styles.label}>Customer:</Text>
-          <Text style={styles.value}>{singleData?.singleData?.data?.customerData?.name}</Text>
+          <Text style={styles.value}>
+            {singleData?.singleData?.data?.customerData?.name}
+          </Text>
           <Text style={styles.label}>Address:</Text>
-          <Text style={styles.value}>{singleData?.singleData?.data?.customerData?.address}</Text>
+          <Text style={styles.value}>
+            {singleData?.singleData?.data?.customerData?.address}
+          </Text>
         </View>
         <View style={styles.invoiceDetails}>
           <Text style={styles.label}>Invoice #:</Text>
           <Text style={styles.value}>12345</Text>
           <Text style={styles.label}>Date:</Text>
-          <Text style={styles.value}>{singleData?.singleData?.data?.createdAt.split("T")[0]}</Text>
+          <Text style={styles.value}>
+            {singleData?.singleData?.data?.createdAt.split("T")[0]}
+          </Text>
         </View>
       </View>
 
@@ -49,7 +57,7 @@ const InvoiceScreen = (singleData) => {
           <Text style={styles.headerTextLast}>Amt</Text>
         </View>
         {singleData?.singleData?.data?.orderDetails.map((item, idx) => (
-          <View key={item._id}  style={styles.mapContainer}>
+          <View key={item._id} style={styles.mapContainer}>
             <View style={styles.itemRow}>
               <Text style={styles.productNameCell}>{item?.productName}</Text>
               <Text style={styles.itemCell}>{item.productQuantity}</Text>
@@ -58,7 +66,10 @@ const InvoiceScreen = (singleData) => {
             </View>
             {item?.addons?.map((addon, index) => (
               <View key={addon._id} style={styles.addonRow}>
-                <Text style={styles.productNameCell}> + {addon?.addonName}</Text>
+                <Text style={styles.productNameCell}>
+                  {" "}
+                  + {addon?.addonName}
+                </Text>
                 <Text style={styles.itemCell}>{addon.addonQuantity}</Text>
                 <Text style={styles.itemCell}>${addon.addonPrice}</Text>
                 <Text style={styles.itemCellLast}>${addon.addonSubTotal}</Text>
@@ -145,7 +156,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "right",
   },
-  mapContainer:{
+  mapContainer: {
     backgroundColor: "#f8f8f8",
     marginBottom: 1,
   },
@@ -155,7 +166,7 @@ const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: "#ededed",
   },
-  addonRow:{
+  addonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 5,

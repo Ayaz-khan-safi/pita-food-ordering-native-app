@@ -56,7 +56,7 @@ export default function OrderCard({ item }) {
 
       <Image
         style={styles.image}
-        source={require("../assets/OrderCardImage/pizzaImage.png")}
+        source={require("../images/order-images/pizzaImage.png")}
       />
       <View style={styles.detailsContainer}>
         <View style={styles.topDetails}>

@@ -317,7 +317,7 @@ export default function OrderDetailsScreen() {
 
   return (
     <ImageBackground
-      source={require("../assets/bgimg.png")}
+      source={require("../images/bgimg.png")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
@@ -426,7 +426,7 @@ export default function OrderDetailsScreen() {
                         style={{ flex: 0, width: "20%", textAlign: "left" }}
                       >
                         <Image
-                          source={require("../assets/OrderCardImage/pizzaImage.png")}
+                          source={require("../images/order-images/pizzaImage.png")}
                           style={{
                             width: 50,
                             height: 30,
@@ -509,7 +509,7 @@ export default function OrderDetailsScreen() {
                               }}
                             >
                               <Image
-                                source={require("../assets/OrderCardImage/pizzaImage.png")}
+                                source={require("../images/order-images/pizzaImage.png")}
                                 style={{ width: 50, height: 30 }}
                               ></Image>
                             </View>

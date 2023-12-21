@@ -56,15 +56,16 @@ export default function Login() {
       keyboardVerticalOffset={Platform.OS === "android" ? -80 : 0}
     >
       <ImageBackground
-        source={require("../assets/bgimg.png")}
-        style={styles.backgroundImage}png
+        source={require("../images/bgimg.png")}
+        style={styles.backgroundImage}
+        png
       >
         <View style={styles.overlay}>
           <View style={styles.formContainer}>
             <View style={styles.headingContainer}>
               {/* <Text style={styles.headingText}>Pita Burger Master</Text> */}
               <Image
-                source={require("../assets/favicon.png")}
+                source={require("../images/favicon.png")}
                 style={{
                   width: "60%",
                   height: 250,

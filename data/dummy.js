@@ -7,7 +7,7 @@ const dummyData = [
     address: "123 Main St, Cityville",
     quantity: 2,
     price: 10.99,
-    image: require("../assets/OrderCardImage/burgerImage.png"),
+    image: require("../images/order-images/burgerImage.png"),
   },
   {
     id: "2",
@@ -17,7 +17,7 @@ const dummyData = [
     address: "456 Elm St, Townsville",
     quantity: 1,
     price: 14.99,
-    image: require("../assets/OrderCardImage/pizzaImage.png"),
+    image: require("../images/order-images/pizzaImage.png"),
   },
   {
     id: "3",
@@ -27,7 +27,7 @@ const dummyData = [
     address: "789 Oak St, Villageton",
     quantity: 3,
     price: 12.49,
-    image: require("../assets/OrderCardImage/burgerImage.png"),
+    image: require("../images/order-images/burgerImage.png"),
   },
   {
     id: "4",
@@ -37,7 +37,7 @@ const dummyData = [
     address: "101 Pine St, Forestville",
     quantity: 1,
     price: 13.99,
-    image: require("../assets/OrderCardImage/pizzaImage.png"),
+    image: require("../images/order-images/pizzaImage.png"),
   },
   {
     id: "5",
@@ -47,7 +47,7 @@ const dummyData = [
     address: "202 Cedar St, Laketown",
     quantity: 2,
     price: 11.99,
-    image: require("../assets/OrderCardImage/burgerImage.png"),
+    image: require("../images/order-images/burgerImage.png"),
   },
   {
     id: "6",
@@ -57,7 +57,7 @@ const dummyData = [
     address: "303 Maple St, Hilltop",
     quantity: 1,
     price: 12.99,
-    image: require("../assets/OrderCardImage/pizzaImage.png"),
+    image: require("../images/order-images/pizzaImage.png"),
   },
   {
     id: "7",
@@ -67,7 +67,7 @@ const dummyData = [
     address: "404 Birch St, Lakewood",
     quantity: 4,
     price: 9.99,
-    image: require("../assets/OrderCardImage/burgerImage.png"),
+    image: require("../images/order-images/burgerImage.png"),
   },
   {
     id: "8",
@@ -77,7 +77,7 @@ const dummyData = [
     address: "505 Spruce St, Greenfield",
     quantity: 1,
     price: 15.99,
-    image: require("../assets/OrderCardImage/pizzaImage.png"),
+    image: require("../images/order-images/pizzaImage.png"),
   },
   {
     id: "9",
@@ -87,7 +87,7 @@ const dummyData = [
     address: "606 Pineapple St, Orchard",
     quantity: 2,
     price: 13.49,
-    image: require("../assets/OrderCardImage/burgerImage.png"),
+    image: require("../images/order-images/burgerImage.png"),
   },
   {
     id: "10",
@@ -97,7 +97,7 @@ const dummyData = [
     address: "707 Peach St, Riverside",
     quantity: 3,
     price: 11.49,
-    image: require("../assets/OrderCardImage/pizzaImage.png"),
+    image: require("../images/order-images/pizzaImage.png"),
   },
   {
     id: "11",
@@ -107,7 +107,7 @@ const dummyData = [
     address: "808 Cherry St, Hillside",
     quantity: 2,
     price: 10.99,
-    image: require("../assets/OrderCardImage/burgerImage.png"),
+    image: require("../images/order-images/burgerImage.png"),
   },
   {
     id: "12",
@@ -117,7 +117,7 @@ const dummyData = [
     address: "909 Lemon St, Sunnyside",
     quantity: 1,
     price: 14.49,
-    image: require("../assets/OrderCardImage/pizzaImage.png"),
+    image: require("../images/order-images/pizzaImage.png"),
   },
   {
     id: "13",
@@ -127,7 +127,7 @@ const dummyData = [
     address: "1010 Grape St, Vineyard",
     quantity: 3,
     price: 12.99,
-    image: require("../assets/OrderCardImage/burgerImage.png"),
+    image: require("../images/order-images/burgerImage.png"),
   },
   {
     id: "14",
@@ -137,7 +137,7 @@ const dummyData = [
     address: "1111 Orange St, Citrusville",
     quantity: 1,
     price: 13.99,
-    image: require("../assets/OrderCardImage/pizzaImage.png"),
+    image: require("../images/order-images/pizzaImage.png"),
   },
   {
     id: "15",
@@ -147,7 +147,7 @@ const dummyData = [
     address: "1212 Lime St, Fruitland",
     quantity: 2,
     price: 11.49,
-    image: require("../assets/OrderCardImage/burgerImage.png"),
+    image: require("../images/order-images/burgerImage.png"),
   },
 ];
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 
-export default function OneCard(){
+export default function OneCard() {
   return (
     <View style={styles.container}>
       <View style={styles.statusContainerDelivered}>
@@ -12,7 +12,7 @@ export default function OneCard(){
       </View>
       <Image
         style={styles.image}
-        source={require("../assets/OrderCardImage/pizzaImage.png")}
+        source={require("../images/order-images/pizzaImage.png")}
       />
       <View style={styles.detailsContainer}>
         <View style={styles.topDetails}>
@@ -32,7 +32,7 @@ export default function OneCard(){
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textTransform: "uppercase",
-    textShadowColor: "green", 
+    textShadowColor: "green",
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2, 
+    textShadowRadius: 2,
   },
   image: {
     width: 100,
@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "green",
     marginBottom: 2,
-
   },
   address: {
     fontSize: 14,
@@ -127,10 +126,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "green",
-    textShadowColor: "white", 
+    textShadowColor: "white",
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5, 
-    
+    textShadowRadius: 5,
   },
   quantity: {
     fontSize: 14,
@@ -153,4 +151,3 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
-
